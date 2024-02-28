@@ -1,0 +1,8 @@
+<.header>
+  Edit Bet <%= @bet.id %>
+  <:subtitle>Use this form to manage bet records in your database.</:subtitle>
+</.header>
+
+<.bet_form changeset={@changeset} action={~p"/bets/#{@bet}"} />
+
+<.back navigate={~p"/bets"}>Back to bets</.back>

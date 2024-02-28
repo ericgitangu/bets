@@ -8,6 +8,7 @@ defmodule Bets.Repo.Migrations.CreateUsers do
       add :email_address, :string, unique: true
       add :msisdn, :string, unique: true
       add :role, :string, default: "user"
+      add :encrypted_password, :string
 
       timestamps()
     end

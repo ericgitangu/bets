@@ -21,7 +21,7 @@ To set up and run this application, you need to follow these steps:
 To use the application, follow these steps:
 
 1. Access the application at `http:/localhost:4000`
-2. Sign up or log in with Github to start viewing and participating in wagering BettingSystem
+2. Sign up or log in with Github to start viewing and participating in wagering Bets
 
 ## Overview
 
@@ -33,18 +33,18 @@ The betting system will be a dynamic, scalable web application built using the P
 
 ### System Components
 
-1. **Web Interface**: A responsive and user-friendly interface for both frontend users and administrators.
+1. **Web Interface**: A responsive and user-friendly interface for both user users and administrators.
 2. **Elixir/Phoenix Backend**: The core logic of the application, handling requests, business logic, data management, and notifications.
-3. **Database**: PostgreSQL for data storage, including user data, BettingSystem, games, and transaction histories.
+3. **Database**: PostgreSQL for data storage, including user data, Bets, games, and transaction histories.
 4. **Authentication and Authorization**: For secure access control using Phoenix's built-in libraries or external libraries like Guardian.
 5. **Email Service**: For sending notifications to users about bet outcomes, using an email library compatible with Elixir, such as Bamboo.
 
 ### Functional Requirements
 
 1. **User Management**: Registration, authentication, profile management, and account management.
-2. **Bet Management**: Placing, viewing, and canceling BettingSystem.
+2. **Bet Management**: Placing, viewing, and canceling Bets.
 3. **Game Management**: Adding, updating, and managing sports games, initially limited to football but expandable to other types.
-4. **Transaction History**: Viewing a history of BettingSystem, including winnings and losses.
+4. **Transaction History**: Viewing a history of Bets, including winnings and losses.
 5. **Administrative Functions**: User management, bet oversight, soft deletion of users and data, and profit tracking.
 6. **Superuser Privileges**: Configuring games, managing user roles, and sending email notifications.
 
@@ -54,14 +54,14 @@ The betting system will be a dynamic, scalable web application built using the P
 
 - `Users`: Stores user information, including `first_name`, `last_name`, `email_address`, `msisdn`, and role.
 - `Games`: Contains game details, with a dynamic structure to accommodate different sports types.
-- `BettingSystem`: Records details of BettingSystem placed by users, including the associated game, bet amount, and status.
-- `Transactions`: Logs all betting transactions, including wins and losses.
+- `Bets`: Records details of Bets placed by users, including the associated game, bet amount, and status.
+- `Transactions`: Logs all Wagers transactions, including wins and losses.
 
 #### Elixir/Phoenix Modules
 
 1. **User Module**: Handles user registration, authentication, profile updates, and role management.
 2. **Game Module**: Manages game records, including creation, updates, and listing available games.
-3. **Bet Module**: Manages bet lifecycle, including placing, updating, and canceling BettingSystem, as well as calculating outcomes.
+3. **Bet Module**: Manages bet lifecycle, including placing, updating, and canceling Bets, as well as calculating outcomes.
 4. **Admin Module**: Provides administrative functionalities, including user management, bet oversight, and financial reporting.
 5. **Notification Module**: Manages sending email notifications to users regarding bet outcomes.
 
@@ -93,7 +93,7 @@ Below are the migration files needed to create the necessary tables in your Post
 ## Users Table
 
 ```sh
-defmodule BettingSystem.Repo.Migrations.CreateUsers do
+defmodule Bets.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do
@@ -115,7 +115,7 @@ end
 ## Games Table
 
 ```sh
-defmodule BettingSystem.Repo.Migrations.CreateGames do
+defmodule Bets.Repo.Migrations.CreateGames do
   use Ecto.Migration
 
   def change do
@@ -131,14 +131,14 @@ defmodule BettingSystem.Repo.Migrations.CreateGames do
 end
 ```
 
-## BettingSystem Table
+## Bets Table
 
 ```sh
-defmodule BettingSystem.Repo.Migrations.CreateBettingSystem do
+defmodule Bets.Repo.Migrations.CreateBets do
   use Ecto.Migration
 
   def change do
-    create table(:BettingSystem) do
+    create table(:Bets) do
       add :amount, :decimal
       add :status, :string, default: "pending" # Possible values: pending, won, lost
       add :user_id, references(:users)
@@ -147,8 +147,8 @@ defmodule BettingSystem.Repo.Migrations.CreateBettingSystem do
       timestamps()
     end
 
-    create index(:BettingSystem, [:user_id])
-    create index(:BettingSystem, [:game_id])
+    create index(:Bets, [:user_id])
+    create index(:Bets, [:game_id])
   end
 end
 ```
@@ -156,7 +156,7 @@ end
 ## User Schema
 
 ```sh
-defmodule BettingSystem.Accounts.User do
+defmodule Bets.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -182,9 +182,9 @@ end
 ## User Creation
 
 ```sh
-defmodule BettingSystem.Accounts do
-  alias BettingSystem.Accounts.User
-  alias BettingSystem.Repo
+defmodule Bets.Users do
+  alias Bets.Users.User
+  alias Bets.Repo
 
   def create_user(attrs) do
     %User{}
@@ -229,16 +229,16 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
 
 ## Unit-Test Strategy (Red/Green)
 
-Next, we'll write ExUnit tests for the create_user function in the BettingSystem.Accounts module. These tests will verify that the function behaves as expected when given valid and invalid input.
+Next, we'll write ExUnit tests for the create_user function in the Bets.Users module. These tests will verify that the function behaves as expected when given valid and invalid input.
 
 ## Example - Test for Successfull User Creation
 
 ```sh
-defmodule BettingSystem.AccountsTest do
-  use BettingSystem.DataCase
+defmodule Bets.UsersTest do
+  use Bets.DataCase
 
-  alias BettingSystem.Accounts
-  alias BettingSystem.Accounts.User
+  alias Bets.Users
+  alias Bets.Users.User
 
   describe "create_user/1" do
     test "creates a user with valid data" do
@@ -271,14 +271,14 @@ end
 
 ## Entity Relational Diagram
 
-![Entity Relational Diagram](assets/BettingSystemERD.png)
+![Entity Relational Diagram](assets/BetsERD.png)
 
 ## User Schema specific roles
 
 First, ensure your user schema includes a field to store the user's role. You might have a role field that can store values such as "user", "admin", or "superuser".
 
 ```sh
-defmodule BettingSystem.Accounts.User do
+defmodule Bets.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -305,9 +305,9 @@ end
 In your accounts context (or wherever you manage user-related logic), implement functions to grant or revoke admin roles. Ensure that only superusers can execute these functions.
 
 ```sh
-defmodule BettingSystem.Accounts do
-  alias BettingSystem.Accounts.User
-  alias BettingSystem.Repo
+defmodule Bets.Users do
+  alias Bets.Users.User
+  alias Bets.Repo
 
   <!-- Function to grant admin role -->
   def grant_admin_role(superuser_id, target_user_id) do
@@ -356,14 +356,14 @@ end
 Ensure that role management functions can only be executed by superusers. This can be done at the controller level by checking the current user's role before allowing them to call grant_admin_role/2 or revoke_admin_role/2. You might use a plug or a controller callback to perform this check.
 
 ```sh
-defmodule BettingSystemWeb.UserController do
-  use BettingSystemWeb, :controller
+defmodule BetsWeb.UserController do
+  use BetsWeb, :controller
 
   plug :authorize_superuser when action in [:grant_admin, :revoke_admin]
 
   def grant_admin(conn, %{"target_user_id" => target_user_id}) do
     current_user = conn.assigns.current_user
-    case BettingSystem.Accounts.grant_admin_role(current_user.id, target_user_id) do
+    case Bets.Users.grant_admin_role(current_user.id, target_user_id) do
       {:ok, _user} -> 
         conn
         |> put_flash(:info, "Admin role granted successfully.")
@@ -377,7 +377,7 @@ defmodule BettingSystemWeb.UserController do
 
   def revoke_admin(conn, %{"target_user_id" => target_user_id}) do
     current_user = conn.assigns.current_user
-    case BettingSystem.Accounts.revoke_admin_role(current_user.id, target_user_id) do
+    case Bets.Users.revoke_admin_role(current_user.id, target_user_id) do
       {:ok, _user} -> 
         conn
         |> put_flash(:info, "Admin role revoked successfully.")

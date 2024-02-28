@@ -18,6 +18,10 @@ defmodule BetsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    resources "/games", GameController
+    resources "/bets", BetController
+    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.

@@ -8,7 +8,7 @@ defmodule Bets.Users.User do
     field :last_name, :string
     field :email, :string
     field :msisdn, :string
-    field :role, Ecto.Enum, values: [:frontend, :admin, :superuser], default: :frontend
+    field :role, Ecto.Enum, values: [:user, :admin, :superuser], default: :user
     field :encrypted_password, :string
 
   end

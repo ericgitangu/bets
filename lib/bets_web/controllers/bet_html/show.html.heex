@@ -1,0 +1,15 @@
+<.header>
+  Bet <%= @bet.id %>
+  <:subtitle>This is a bet record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/bets/#{@bet}/edit"}>
+      <.button>Edit bet</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Amount"><%= @bet.amount %></:item>
+</.list>
+
+<.back navigate={~p"/bets"}>Back to bets</.back>
