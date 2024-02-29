@@ -38,3 +38,10 @@ npm-debug.log
 # Config file
 /config/*
 
+# Ignore .beam files
+/ebin/
+
+#ignore elixir build files
+/_build/
+.elixir_ls/
+
