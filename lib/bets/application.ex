@@ -7,13 +7,16 @@ defmodule Bets.Application do
 
   @impl true
   def start(_type, _args) do
+    Oban.Telemetry.attach_default_logger()
     children = [
       BetsWeb.Telemetry,
       Bets.Repo,
       {DNSCluster, query: Application.get_env(:bets, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Bets.PubSub},
+      {Oban, Application.fetch_env!(:bets, Oban)},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Bets.Finch},
+
       # Start a worker by calling: Bets.Worker.start_link(arg)
       # {Bets.Worker, arg},
       # Start to serve requests, typically the last entry
