@@ -21,7 +21,7 @@ defmodule BetsWeb.Router do
 
     resources "/games", GameController
     resources "/bets", BetController
-    resources "/users", UserController
+    resources "/players", PlayerController
   end
 
   # Other scopes may use custom stacks.

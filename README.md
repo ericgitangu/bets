@@ -52,7 +52,7 @@ The betting system will be a dynamic, scalable web application built using the P
 
 #### Database Schema
 
-- `Users`: Stores user information, including `first_name`, `last_name`, `email_address`, `msisdn`, and role.
+- `Users`: Stores user information, including `first_name`, `last_name`, `email`, `msisdn`, and role.
 - `Games`: Contains game details, with a dynamic structure to accommodate different sports types.
 - `Bets`: Records details of Bets placed by users, including the associated game, bet amount, and status.
 - `Transactions`: Logs all Wagers transactions, including wins and losses.
@@ -100,14 +100,14 @@ defmodule Bets.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :first_name, :string
       add :last_name, :string
-      add :email_address, :string, unique: true
+      add :email, :string, unique: true
       add :msisdn, :string, unique: true
       add :role, :string, default: "user"
 
       timestamps()
     end
 
-    create index(:users, [:email_address])
+    create index(:users, [:email])
   end
 end
 ```
@@ -163,7 +163,7 @@ defmodule Bets.Users.User do
   schema "users" do
     field :first_name, :string
     field :last_name, :string
-    field :email_address, :string
+    field :email, :string
     field :msisdn, :string
     field :role, :string
 
@@ -173,8 +173,8 @@ defmodule Bets.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email_address, :msisdn, :role])
-    |> validate_required([:first_name, :last_name, :email_address, :msisdn])
+    |> cast(attrs, [:first_name, :last_name, :email, :msisdn, :role])
+    |> validate_required([:first_name, :last_name, :email, :msisdn])
   end
 end
 ```
@@ -242,12 +242,12 @@ defmodule Bets.UsersTest do
 
   describe "create_user/1" do
     test "creates a user with valid data" do
-      attrs = %{first_name: "Jane", last_name: "Doe", email_address: "jane@example.com", msisdn: "1234567890"}
+      attrs = %{first_name: "Jane", last_name: "Doe", email: "jane@example.com", msisdn: "1234567890"}
       {:ok, user} = Accounts.create_user(attrs)
 
       assert user.first_name == "Jane"
       assert user.last_name == "Doe"
-      assert user.email_address == "jane@example.com"
+      assert user.email == "jane@example.com"
       assert user.msisdn == "1234567890"
     end
   end
@@ -264,7 +264,7 @@ describe "create_user/1 with invalid data" do
 
     assert changeset.valid? == false
     assert Enum.any?(changeset.errors, fn {field, _} -> field == :last_name end)
-    assert Enum.any?(changeset.errors, fn {field, _} -> field == :email_address end)
+    assert Enum.any?(changeset.errors, fn {field, _} -> field == :email end)
   end
 end
 ```
@@ -285,7 +285,7 @@ defmodule Bets.Users.User do
   schema "users" do
     field :first_name, :string
     field :last_name, :string
-    field :email_address, :string
+    field :email, :string
     field :msisdn, :string
     field :role, :string, default: "user" # Assuming 'user', 'admin', 'superuser'
 
@@ -294,8 +294,8 @@ defmodule Bets.Users.User do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email_address, :msisdn, :role])
-    |> validate_required([:first_name, :last_name, :email_address, :msisdn, :role])
+    |> cast(attrs, [:first_name, :last_name, :email, :msisdn, :role])
+    |> validate_required([:first_name, :last_name, :email, :msisdn, :role])
   end
 end
 ```

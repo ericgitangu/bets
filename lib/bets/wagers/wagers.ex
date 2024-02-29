@@ -4,8 +4,8 @@ defmodule Bets.Wagers.Bet do
 
   schema "bets" do
     field :amount, :decimal
-    field :user_id, :id
-    field :game_id, :id
+    belongs_to :player, Bets.Players.Player
+    belongs_to :game, Bets.Games.Game
 
     timestamps(type: :utc_datetime)
   end

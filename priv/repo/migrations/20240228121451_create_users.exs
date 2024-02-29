@@ -2,17 +2,17 @@ defmodule Bets.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do
-    create table(:users) do
+    create table(:players) do
       add :first_name, :string
       add :last_name, :string
-      add :email_address, :string, unique: true
+      add :email, :string, unique: true
       add :msisdn, :string, unique: true
-      add :role, :string, default: "user"
+      add :role, :string, default: "player"
       add :encrypted_password, :string
 
       timestamps()
     end
 
-    create index(:users, [:email_address])
+    create index(:players, [:email])
   end
 end
