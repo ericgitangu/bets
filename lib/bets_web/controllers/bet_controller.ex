@@ -4,6 +4,9 @@ defmodule BetsWeb.BetController do
   alias Bets.Wagers
   alias Bets.Wagers.Bet
 
+  plug Bets.Plugs.Authenticate when action in [:new, :create, :show]
+  plug Bets.Plugs.SuperUser when action in [:edit, :update, :delete]
+
   def index(conn, _params) do
     bets = Wagers.list_bets()
     render(conn, :index, bets: bets)

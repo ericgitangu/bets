@@ -2,7 +2,6 @@ defmodule Bets.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
-
   use Application
 
   @impl true
@@ -18,13 +17,10 @@ defmodule Bets.Application do
       {Finch, name: Bets.Finch},
 
       # Start a worker by calling: Bets.Worker.start_link(arg)
-      # {Bets.Worker, arg},
+      # %{game_id: 1} |> Bets.Games.GameRoundJob.new() |> Oban.insert(),
       # Start to serve requests, typically the last entry
       BetsWeb.Endpoint
     ]
-
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Bets.Supervisor]
     Supervisor.start_link(children, opts)
   end

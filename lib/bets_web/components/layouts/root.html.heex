@@ -48,9 +48,30 @@
             href={~p"/users/log_in"}
             class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
-            Log in
+            Login  or &nbsp;&rarr;
           </.link>
         </li>
+      <% end %>
+            <%= if @conn.assigns.current_user do %>
+        <.link
+          href={~p"/auth/logout"}
+          method="delete"
+          class="block py-2 px-4 text-sm text-gray-700 hover:text-zinc-700"
+        >
+          <span aria-hidden="true">
+            Logout<.icon name="hero-lock-open-solid" class="ml-1 w-3 h-3" />
+          </span>
+        </.link>
+      <% else %>
+        <.link
+          href={~p"/auth/github"}
+          method="get"
+          class="block py-2 px-4 text-sm text-gray-700 hover:text-zinc-700"
+        >
+          <span aria-hidden="true">
+            Continue with Github<.icon name="hero-lock-closed-solid" class="ml-1 w-3 h-3" />
+          </span>
+        </.link>
       <% end %>
     </ul>
     <%= @inner_content %>

@@ -3,14 +3,14 @@ defmodule Bets.WagersTest do
 
   alias Bets.Wagers
 
-  describe "wagers" do
+  describe "bets" do
     alias Bets.Wagers.Bet
 
     import Bets.WagersFixtures
 
     @invalid_attrs %{amount: nil}
 
-    test "list_bets/0 returns all wagers" do
+    test "list_bets/0 returns all bets" do
       bet = bet_fixture()
       assert Wagers.list_bets() == [bet]
     end

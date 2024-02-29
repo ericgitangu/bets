@@ -5,7 +5,6 @@ defmodule Bets.Players do
 
   import Ecto.Query, warn: false
   alias Bets.Repo
-
   alias Bets.Players.Player
 
   @doc """
@@ -49,9 +48,18 @@ defmodule Bets.Players do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_player(attrs \\ %{}) do
-    %Player{}
-    |> Player.changeset(attrs)
+  def create_player(%Ueberauth.Auth.Info{name: name, email: email} = _attrs) do
+    [first_name, last_name | _tail] = String.split(name, " ")
+    IO.inspect(first_name, label: "first")
+    IO.inspect(last_name, label: "last")
+    IO.inspect(email, label: "email")
+
+    Player.changeset(%Player{}, %{
+      first_name: first_name,
+      last_name: last_name,
+      email: email,
+      role: "user"
+    })
     |> Repo.insert()
   end
 
@@ -100,5 +108,19 @@ defmodule Bets.Players do
   """
   def change_player(%Player{} = player, attrs \\ %{}) do
     Player.changeset(player, attrs)
+  end
+
+  def create_users(attrs) do
+    %Player{}
+    |> Player.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_or_create_user(_conn, attrs) do
+    case Repo.get_by(Player, email: "#attrs.email") do
+      nil -> create_player(attrs)
+      {:error, _reason} = error -> error
+      user -> {:ok, user}
+    end
   end
 end

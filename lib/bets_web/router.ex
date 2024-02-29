@@ -11,10 +11,52 @@ defmodule BetsWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :put_user_token
+
+
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  # OAuth2 endpoints
+  scope "/auth", BetsWeb do
+    pipe_through [:browser]
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback_phase
+    delete "/logout", AuthController, :logout
+  end
+
+  # Routes for frontend users
+  scope "/frontendusers", BetsWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/new", FrontendUserLive, :new
+    live "/:id/update", FrontendUserLive, :update
+    live "/:id/edit", FrontendUserLive, :edit
+    live "/:id/show", FrontendUserLive, :show
+    live "/show/:id", FrontendUserLive, :show
+  end
+
+  scope "/frontendusers", BetsWeb do
+    pipe_through :browser
+
+    live "/", FrontendUserLive, :index
+  end
+
+  # Routes for admins
+  scope "/admins", BetsWeb do
+    pipe_through [:browser, :require_super_user]
+
+    live "/new", AdminLive, :new
+    live "/:id/edit", AdminLive, :edit
+    live "/:id/show", AdminLive, :show
+    live "/:id/update", AdminLive, :update
+    live "/create", AdminLive, :create
+    live "/", AdminLive, :index
+    live "/show/:id", AdminLive, :show
   end
 
   scope "/", BetsWeb do
@@ -84,6 +126,25 @@ defmodule BetsWeb.Router do
       on_mount: [{BetsWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+    end
+  end
+
+  defp put_user_token(conn, _) do
+    if current_user = conn.assigns[:current_user] do
+      token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+      assign(conn, :user_token, token)
+    else
+      conn
+    end
+  end
+
+  defp require_super_user(conn, _) do
+    if conn.assigns[:superuser] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Contact an administrator for access.")
+      |> redirect(to: "/admins/log_in")
     end
   end
 end

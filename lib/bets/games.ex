@@ -101,4 +101,43 @@ defmodule Bets.Games do
   def change_game(%Game{} = game, attrs \\ %{}) do
     Game.changeset(game, attrs)
   end
+
+  @doc """
+  Starts a game.
+
+  ## Examples
+
+      iex> start_game(game)
+      {:ok, %Game{}}
+
+      iex> start_game(game)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def start_game(%{"id" => id}) do
+    game = get_game!(id) # Retrieve the game record using `get_game!` function
+
+    updated_game = update_game(game, %{status: "started"}) # Update the game status
+
+    {:ok, updated_game} # Return the updated game record
+  end
+  @doc """
+  Ends a game.
+
+  ## Examples
+
+      iex> end_game(game)
+      {:ok, %Game{}}
+
+      iex> end_game(game)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def end_game(%{"id" => id}) do
+    game = get_game!(id) # Retrieve the game record using `get_game!` function
+    updated_game = update_game(game, %{status: "completed"}) # Update the game status
+    player = Repo.get(Player, game.player_id) # Retrieve the player record based on the game's player_id field
+    {:ok, {updated_game, player}} # Return the updated game record and player record as a tuple
+  end
+
 end

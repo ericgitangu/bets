@@ -1,0 +1,41 @@
+<.header>
+  Listing Frontendusers
+  <:actions>
+    <.link patch={~p"/frontendusers/new"}>
+      <.button>New Frontend user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="frontendusers"
+  rows={@streams.frontendusers}
+  row_click={fn {_id, frontend_user} -> JS.navigate(~p"/frontendusers/#{frontend_user}") end}
+>
+  <:col :let={{_id, frontend_user}} label="Name"><%= frontend_user.name %></:col>
+  <:action :let={{_id, frontend_user}}>
+    <div class="sr-only">
+      <.link navigate={~p"/frontendusers/#{frontend_user}"}>Show</.link>
+    </div>
+    <.link patch={~p"/frontendusers/#{frontend_user}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, frontend_user}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: frontend_user.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="frontend_user-modal" show on_cancel={JS.patch(~p"/frontendusers")}>
+  <.live_component
+    module={BetsWeb.FrontendUserLive.FormComponent}
+    id={@frontend_user.id || :new}
+    title={@page_title}
+    action={@live_action}
+    frontend_user={@frontend_user}
+    patch={~p"/frontendusers"}
+  />
+</.modal>

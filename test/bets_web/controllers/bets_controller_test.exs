@@ -8,32 +8,32 @@ defmodule BetsWeb.BetControllerTest do
   @invalid_attrs %{amount: nil}
 
   describe "index" do
-    test "lists all wagers", %{conn: conn} do
-      conn = get(conn, ~p"/wagers")
+    test "lists all bets", %{conn: conn} do
+      conn = get(conn, ~p"/bets")
       assert html_response(conn, 200) =~ "Listing Bets"
     end
   end
 
   describe "new bet" do
     test "renders form", %{conn: conn} do
-      conn = get(conn, ~p"/wagers/new")
+      conn = get(conn, ~p"/bets/new")
       assert html_response(conn, 200) =~ "New Bet"
     end
   end
 
   describe "create bet" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/wagers", bet: @create_attrs)
+      conn = post(conn, ~p"/bets", bet: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == ~p"/wagers/#{id}"
+      assert redirected_to(conn) == ~p"/bets/#{id}"
 
-      conn = get(conn, ~p"/wagers/#{id}")
+      conn = get(conn, ~p"/bets/#{id}")
       assert html_response(conn, 200) =~ "Bet #{id}"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/wagers", bet: @invalid_attrs)
+      conn = post(conn, ~p"/bets", bet: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Bet"
     end
   end
@@ -42,7 +42,7 @@ defmodule BetsWeb.BetControllerTest do
     setup [:create_bet]
 
     test "renders form for editing chosen bet", %{conn: conn, bet: bet} do
-      conn = get(conn, ~p"/wagers/#{bet}/edit")
+      conn = get(conn, ~p"/bets/#{bet}/edit")
       assert html_response(conn, 200) =~ "Edit Bet"
     end
   end
@@ -51,15 +51,15 @@ defmodule BetsWeb.BetControllerTest do
     setup [:create_bet]
 
     test "redirects when data is valid", %{conn: conn, bet: bet} do
-      conn = put(conn, ~p"/wagers/#{bet}", bet: @update_attrs)
-      assert redirected_to(conn) == ~p"/wagers/#{bet}"
+      conn = put(conn, ~p"/bets/#{bet}", bet: @update_attrs)
+      assert redirected_to(conn) == ~p"/bets/#{bet}"
 
-      conn = get(conn, ~p"/wagers/#{bet}")
+      conn = get(conn, ~p"/bets/#{bet}")
       assert html_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn, bet: bet} do
-      conn = put(conn, ~p"/wagers/#{bet}", bet: @invalid_attrs)
+      conn = put(conn, ~p"/bets/#{bet}", bet: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Bet"
     end
   end
@@ -68,11 +68,11 @@ defmodule BetsWeb.BetControllerTest do
     setup [:create_bet]
 
     test "deletes chosen bet", %{conn: conn, bet: bet} do
-      conn = delete(conn, ~p"/wagers/#{bet}")
-      assert redirected_to(conn) == ~p"/wagers"
+      conn = delete(conn, ~p"/bets/#{bet}")
+      assert redirected_to(conn) == ~p"/bets"
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/wagers/#{bet}")
+        get(conn, ~p"/bets/#{bet}")
       end
     end
   end

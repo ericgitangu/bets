@@ -17,6 +17,6 @@ defmodule Bets.Players.Player do
   def changeset(player, attrs) do
     player
     |> cast(attrs, [:first_name, :last_name, :email, :encrypted_password, :msisdn, :role])
-    |> validate_required([:first_name, :last_name, :email, :encrypted_password, :msisdn, :role])
+    |> validate_required([:first_name, :last_name, :email,:role])
   end
 end
