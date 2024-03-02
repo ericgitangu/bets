@@ -19,4 +19,18 @@ defmodule Bets.GamesFixtures do
 
     game
   end
+
+  @doc """
+  Generate a game.
+  """
+  def game_fixture(attrs \\ %{}) do
+    {:ok, game} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Bets.Games.create_game()
+
+    game
+  end
 end

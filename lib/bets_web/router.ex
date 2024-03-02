@@ -33,38 +33,48 @@ defmodule BetsWeb.Router do
   scope "/frontendusers", BetsWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/new", FrontendUserLive, :new
-    live "/:id/update", FrontendUserLive, :update
-    live "/:id/edit", FrontendUserLive, :edit
-    live "/:id/show", FrontendUserLive, :show
-    live "/show/:id", FrontendUserLive, :show
+    live "/new", FrontendUserLive.Index, :new
+    live "/:id/update", FrontendUserLive.Index, :update
+    live "/:id/edit", FrontendUserLive.Index, :edit
+    live "/:id/show", FrontendUserLive.Index, :show
+    live "/show/:id", FrontendUserLive.Index, :show
+    live "/", FrontendUserLive.Index, :index
   end
 
-  scope "/frontendusers", BetsWeb do
+  scope "/", BetsWeb do
     pipe_through :browser
+     live "/", GameLive.Index, :index
+  end
 
-    live "/", FrontendUserLive, :index
+  scope "/games", BetsWeb do
+    pipe_through [:browser, :require_super_user]
+
+    live "/new", GameLive.Index, :new
+    live "/:id/edit", GameLive.Index, :edit
+
+    live "/:id", GameLive.Show, :show
+    live "/:id/show/edit", GameLive.Show, :edit
   end
 
   # Routes for admins
   scope "/admins", BetsWeb do
     pipe_through [:browser, :require_super_user]
 
-    live "/new", AdminLive, :new
+    live "/new", AdminLive.Index, :new
     live "/:id/edit", AdminLive, :edit
     live "/:id/show", AdminLive, :show
     live "/:id/update", AdminLive, :update
     live "/create", AdminLive, :create
-    live "/", AdminLive, :index
+    live "/", AdminLive.Index, :index
     live "/show/:id", AdminLive, :show
   end
 
   scope "/", BetsWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # get "/", PageController, :home
 
-    resources "/games", GameController
+    # resources "/games", GameController
     resources "/bets", BetController
     resources "/players", PlayerController
   end
@@ -144,7 +154,7 @@ defmodule BetsWeb.Router do
     else
       conn
       |> put_flash(:error, "Contact an administrator for access.")
-      |> redirect(to: "/admins/log_in")
+      |> redirect(to: "/users/log_in")
     end
   end
 end
