@@ -36,19 +36,21 @@ defmodule BetsWeb.UserSocket do
   @impl true
   def connect(%{"token" => token}, socket, _connect_info) do
     # max_age: 1209600 is equivalent to two weeks in seconds
+    import Phoenix.Token
     case Phoenix.Token.verify(socket, "user socket", token, max_age: 1_209_600) do
       {:ok, id} ->
-        {:ok, assign(socket, :id, id)}
-         {:error, _reason} ->
-           :error
-      end
+        {:ok, assign(socket, :user, id)}
+
+      {:error, reason} ->
+        :error
     end
+  end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
   @impl true
-  def id(socket) do
-      "user_socket:#{socket.assigns.id}"
+  def(id(socket)) do
+    "user_socket:#{socket.assigns.user}"
   end
   #
   # Would allow you to broadcast a "disconnect" event and terminate
