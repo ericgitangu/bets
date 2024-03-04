@@ -13,6 +13,7 @@ defmodule BetsWeb.Router do
     plug :fetch_current_user
     plug Bets.Plugs.Authenticate
     plug :put_user_token
+    plug Bets.Plugs.SuperUser
 
   end
 

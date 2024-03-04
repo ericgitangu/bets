@@ -15,7 +15,7 @@ defmodule BetsWeb.PlayerController do
   end
 
   def create(conn, %{"player" => player_params}) do
-    case Player.create_player(player_params) do
+    case Players.create_player(player_params) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Player created successfully.")

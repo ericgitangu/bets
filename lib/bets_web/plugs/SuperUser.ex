@@ -10,7 +10,6 @@ defmodule Bets.Plugs.SuperUser do
     case conn.assigns[:current_user] do
       %User{role: "superuser"} ->
         conn
-
       _ ->
         conn
         |> put_flash(:error, "Access denied: Contact an administrator for access.")

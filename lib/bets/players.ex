@@ -34,6 +34,13 @@ defmodule Bets.Players do
       ** (Ecto.NoResultsError)
 
   """
+  
+  def create_players(attrs \\ %{}) do
+    %Player{}
+    |> Player.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def get_player!(id), do: Repo.get!(Player, id)
 
   @doc """
