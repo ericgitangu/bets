@@ -2,13 +2,35 @@ defmodule Bets.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Bets.Repo
+  alias Bets.Accounts.User
+
   schema "users" do
+    field :name, :string, default: ""
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :role, Ecto.Enum, values: [:user, :admin, :superuser], default: :user
+    field :game_id, :integer
+    field :bet_id, :integer
+    field :player_id, :integer
+    field :admin_id, :integer
+
+    has_many :frontendusers, Bets.FrontendUsers.FrontendUser
+    has_many :users, Bets.Users.User
+    has_many :games, Bets.Games.Game
+    has_many :bets, Bets.Wagers.Bet
+    has_many :players, Bets.Players.Player
 
     timestamps(type: :utc_datetime)
+  end
+
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :email, :hashed_password, :confirmed_at,:role, :game_id, :bet_id, :player_id, :admin_id])
+    |> validate_required([:email, :password, :confirmed_at,:role])
+    |> unique_constraint(:email)
   end
 
   @doc """
@@ -44,6 +66,7 @@ defmodule Bets.Accounts.User do
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
+    |> unique_constraint(:email)
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> maybe_validate_unique_email(opts)
@@ -155,4 +178,38 @@ defmodule Bets.Accounts.User do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  @doc """
+  Creates a user with the given attributes.
+
+
+    ## Examples
+
+        iex> create_user(%{name: "John Doe", email: "johndoe@email.com", hashed_password: "password"})
+        {:ok, %User{}}
+  """
+def create_user(%Ueberauth.Auth.Info{name: name, email: email} = attrs) do
+  confirmed_at = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  password = Bcrypt.hash_pwd_salt("#{confirmed_at}#{email}")
+  user = %User{name: name, email: email, hashed_password: password, confirmed_at: confirmed_at}
+
+  case Repo.insert(user, on_conflict: :nothing) do
+    {:ok, user} ->
+      {:ok, user}
+    {:error, changeset} ->
+      {:error, changeset}
+  end
+end
+
+  @doc """
+  Updates a user with the given attributes.
+  """
+  def get_or_create_user(_conn, attrs) do
+    case Repo.get_by(User, email: "#attrs.email") do
+      nil -> create_user(attrs)
+      {:error, _reason} = error -> error
+      user -> {:ok, user}
+    end
+  end
+
 end

@@ -4,6 +4,8 @@ defmodule Bets.FrontendUsers.FrontendUser do
 
   schema "frontendusers" do
     field :name, :string
+    field :user_id, :integer
+    field :admin_id, :integer
 
     timestamps(type: :utc_datetime)
   end
@@ -11,7 +13,7 @@ defmodule Bets.FrontendUsers.FrontendUser do
   @doc false
   def changeset(frontend_user, attrs) do
     frontend_user
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :user_id, :admin_id])
     |> validate_required([:name])
   end
 end

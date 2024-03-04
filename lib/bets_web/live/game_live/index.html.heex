@@ -6,7 +6,6 @@
     </.link>
   </:actions>
 </.header>
-
 <.table
   id="games"
   rows={@streams.games}
@@ -29,7 +28,7 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="game-modal" show on_cancel={JS.patch(~p"/games")}>
+<.modal :if={@live_action in [:new, :edit]} id="game-modal" show on_cancel={JS.patch(~p"/")}>
   <.live_component
     module={BetsWeb.GameLive.FormComponent}
     id={@game.id || :new}

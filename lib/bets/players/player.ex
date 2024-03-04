@@ -3,12 +3,12 @@ defmodule Bets.Players.Player do
   import Ecto.Changeset
 
   schema "players" do
-    field :first_name, :string
-    field :last_name, :string
-    field :email, :string
-    field :encrypted_password, :string
-    field :msisdn, :string
-    field :role, Ecto.Enum, values: [:user, :admin, :superuser], default: :user
+    field :wins, :integer, default: 0
+    field :losses, :integer, default: 0
+    field :draws, :integer, default: 0
+    field :user_id, :integer
+    field :game_id, :integer
+    field :bet_id, :integer
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +16,8 @@ defmodule Bets.Players.Player do
   @doc false
   def changeset(player, attrs) do
     player
-    |> cast(attrs, [:first_name, :last_name, :email, :encrypted_password, :msisdn, :role])
-    |> validate_required([:first_name, :last_name, :email,:role])
+    |> cast(attrs, [:wins, :losses, :draws, :user_id, :game_id, :bet_id])
+    |> validate_required([:wins, :losses, :draws])
+    |> unique_constraint(:user_id)
   end
 end

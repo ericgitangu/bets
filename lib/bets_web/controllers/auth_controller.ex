@@ -2,7 +2,7 @@ defmodule BetsWeb.AuthController do
   use Phoenix.Controller
   plug Ueberauth
 
-  alias Bets.Players
+  alias Bets.Accounts.User
 
   def callback_phase(%{assigns: %{ueberauth_failure: fails}} = conn, _params) do
     conn
@@ -11,31 +11,25 @@ defmodule BetsWeb.AuthController do
   end
 
   def callback_phase(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    nickname = auth.info.nickname
     token = auth.credentials.token
     name = auth.info.name
-    user_creation_result = Players.get_or_create_user(conn, auth.info)
-    IO.inspect(conn, label: "-------------------conn-------------------")
-
-  case user_creation_result do
+    user_creation_result = User.get_or_create_user(conn, auth.info)
+    assign_current_user(conn, token)
+    case user_creation_result do
     {:ok, user} ->
-       conn
-       |> put_session(:current_user, user)
-       |> put_session(:currrent_token, token)
-       |> put_session(:user_id, user.id)
-       |> put_session(:user, user)
-       |> put_session(:ueberauth_auth_info, nickname)
-       |> put_flash(:info, "Welcome back #{name}!")
-       |> put_session(:user, user)
-       |> put_session(:current_user, user.id)
-       |> put_session("authorization", "Token Bearer: #{token}")
-       |> redirect(to: "/")
+        conn
+        |> put_flash(:info, "Welcome back #{name}!")
+        |> assign(:current_user, auth.info)
+        |> put_session(:current_user, auth.info)
+        |> put_session(:token, token)
+        |> put_session("authorization", "Token Bearer: #{token}")
+        |> redirect(to: "/")
     {:error, reason} ->
-       conn
-       |> put_flash(:error, reason)
-       |> redirect(to: "/")
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: "/")
+    end
   end
-end
 # Logs out the user and redirects them to the home page.
   @spec logout(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def logout(conn, _params) do
@@ -55,5 +49,10 @@ end
     conn
     |> put_flash(:info, "Callback URL")
     |> redirect(to: "/")
+  end
+
+  defp assign_current_user(conn, user) do
+    conn
+    |> assign(:current_user, user)
   end
 end

@@ -20,8 +20,12 @@ defmodule BetsWeb.GameLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:status]} type="select" value={"upcoming"} label="Status"
+          options={[{"upcoming", "upcoming"}, {"live", "live"}, {"completed", "completed"}]} />
+        <.input field={@form[:game_time]} type="datetime-local" label="Game Time" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Game</.button>
+        <.input field={@form[:user_id]} type="hidden" value={1} />
+        <.button phx-disable-with="Saving...">Save Game</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -60,21 +64,6 @@ defmodule BetsWeb.GameLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Game updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
-  defp save_game(socket, :new, game_params) do
-    case Games.create_game(game_params) do
-      {:ok, game} ->
-        notify_parent({:saved, game})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Game created successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

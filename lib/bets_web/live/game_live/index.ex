@@ -5,7 +5,7 @@ defmodule BetsWeb.GameLive.Index do
   alias Bets.Games.Game
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     {:ok, stream(socket, :games, Games.list_games())}
   end
 

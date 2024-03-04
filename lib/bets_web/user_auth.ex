@@ -200,7 +200,8 @@ defmodule BetsWeb.UserAuth do
   they use the application at all, here would be a good place.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
+    IO.inspect(conn, label: "require_auth_user+--------------------------+")
+    if conn.assigns.current_user do
       conn
     else
       conn

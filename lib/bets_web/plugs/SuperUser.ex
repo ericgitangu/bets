@@ -2,13 +2,13 @@ defmodule Bets.Plugs.SuperUser do
   import Plug.Conn
   use BetsWeb, :controller
 
-  alias Bets.Players.Player
+  alias Bets.Accounts.User
 
   def init(opts), do: opts
 
   def call(conn, _opts) do
     case conn.assigns[:current_user] do
-      %Player{role: "superuser"} ->
+      %User{role: "superuser"} ->
         conn
 
       _ ->

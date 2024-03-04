@@ -48,18 +48,8 @@ defmodule Bets.Players do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_player(%Ueberauth.Auth.Info{name: name, email: email} = _attrs) do
-    [first_name, last_name | _tail] = String.split(name, " ")
-    IO.inspect(first_name, label: "first")
-    IO.inspect(last_name, label: "last")
-    IO.inspect(email, label: "email")
-
-    Player.changeset(%Player{}, %{
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
-      role: "user"
-    })
+  def create_player(attrs \\ %{}) do
+    %Player{attrs | wins: attrs.wins, losses: attrs.losses, draws: attrs.losses}
     |> Repo.insert()
   end
 
@@ -110,14 +100,8 @@ defmodule Bets.Players do
     Player.changeset(player, attrs)
   end
 
-  def create_users(attrs) do
-    %Player{}
-    |> Player.changeset(attrs)
-    |> Repo.insert()
-  end
-
   def get_or_create_user(_conn, attrs) do
-    case Repo.get_by(Player, email: "#attrs.email") do
+    case Repo.get_by(Player, user_id: "#attrs.user_id") do
       nil -> create_player(attrs)
       {:error, _reason} = error -> error
       user -> {:ok, user}

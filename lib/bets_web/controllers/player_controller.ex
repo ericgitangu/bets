@@ -15,11 +15,11 @@ defmodule BetsWeb.PlayerController do
   end
 
   def create(conn, %{"player" => player_params}) do
-    case Players.create_player(player_params) do
-      {:ok, player} ->
+    case Player.create_player(player_params) do
+      {:ok, _} ->
         conn
         |> put_flash(:info, "Player created successfully.")
-        |> redirect(to: ~p"/players/#{player}")
+        |> redirect(to: ~p"/players/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
