@@ -142,7 +142,7 @@ defmodule BetsWeb.Router do
   defp put_user_token(conn, _) do
     token = get_session(conn, :token)
     if conn.assigns[:current_user] do
-      token = Phoenix.Token.sign(conn, "user socket", token)
+      token = Phoenix.Token.sign(conn, "user socket", conn.assigns.current_user.id)
       assign(conn, :user_token, token)
     else
       conn
