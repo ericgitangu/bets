@@ -79,5 +79,6 @@
   </body>
   <script>
     window.csrfToken = "<%= get_csrf_token() %>";
+    window.userToken = "<%= assigns[:user_token] %>"
   </script>
 </html>

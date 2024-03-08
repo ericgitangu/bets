@@ -3,8 +3,28 @@ defmodule BetsWeb.DashboardLive.Index do
 
   alias Bets.Dashboards
   alias Bets.Dashboards.Dashboard
+  alias Bets.Games
+  alias Bets.Games.Game
   alias BetsWeb.BetModalComponent
 
+
+  @impl true
+  def render(assigns) do
+    ~L"""
+    <div class="dashboard">
+      <h1>Dashboard</h1>
+      <div class="analytics">
+        <%= for game <- Bets.Games.list_games() do %>
+          <div class="game">
+            <h2><%= game.name %></h2>
+            <p>Number of players: <%= game.num_players %></p>
+            <p>Revenue: <%= game.revenue %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    """
+  end
 
   @impl true
   def mount(_params, _session, socket) do

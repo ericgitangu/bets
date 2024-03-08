@@ -17,7 +17,6 @@ defmodule Bets.Plugs.Authenticate do
         assign(conn, :current_user, nil)
       user ->
         assign(conn, :user_id, user.id)
-        assign(conn, :user, user)
         assign(conn, :token, token)
         assign(conn, :current_user, user)
     end

@@ -1,10 +1,11 @@
 <.header>
-  Listing Admins
+  Create an Admin
   <:actions>
     <.link patch={~p"/admins/new"}>
       <.button>New Admin</.button>
     </.link>
   </:actions>
+  
 </.header>
 
 <.table
@@ -30,6 +31,15 @@
     </.link>
   </:action>
 </.table>
+
+<.header>
+    Create Games
+    <:actions>
+      <.link patch={~p"/games/new"}>
+        <.button>New Game</.button>
+      </.link>
+    </:actions>
+  </.header>
 
 <.modal :if={@live_action in [:new, :edit]} id="admin-modal" show on_cancel={JS.patch(~p"/admins")}>
   <.live_component

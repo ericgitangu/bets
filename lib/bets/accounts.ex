@@ -42,8 +42,6 @@ defmodule Bets.Accounts do
     when is_binary(email) and is_binary(password) do
 
     user = Repo.get_by(User, email: email)
-    IO.inspect(user, label: "user")
-    IO.inspect(password, label: "password")
     if user && User.valid_password?(user, password), do: user
   end
 

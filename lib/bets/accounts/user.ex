@@ -213,7 +213,6 @@ end
     rescue
       exception ->
         {:error, exception}
-        IO.inspect(exception, label: "exception")
     end
   end
 
