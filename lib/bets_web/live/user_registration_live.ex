@@ -37,7 +37,7 @@ defmodule BetsWeb.UserRegistrationLive do
         <.input field={@form[:password]} type="password" label="Password" required />
 
         <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+          <.button phx-disable-with="Creating account..." class="w-full">Create an account<span aria-hidden="true">→</span></.button>
         </:actions>
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">
@@ -67,7 +67,7 @@ defmodule BetsWeb.UserRegistrationLive do
   def handle_event("save", %{"user" => user_params}, socket) do
       case User.get_or_create_user(user_params) do
         {:ok, user} ->
-          {:noreply, socket |> put_flash(:info, "Successfully signed up! Proceed to login")}
+          {:noreply, socket |> put_flash(:info, "Account successfully created! Login to your account to proceed") |> redirect(to: "/users/log_in?_action=registered")}
 
         {:error, :user_already_confirmed} ->
           {:noreply, socket |> put_flash(:info, "User already confirmed")}

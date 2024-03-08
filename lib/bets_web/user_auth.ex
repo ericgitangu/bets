@@ -31,6 +31,7 @@ defmodule BetsWeb.UserAuth do
 
     conn
     |> renew_session()
+    |> put_user_in_session(user)
     |> put_token_in_session(token)
     |> maybe_write_remember_me_cookie(token, params)
     |> redirect(to: user_return_to || signed_in_path(conn))
@@ -215,6 +216,11 @@ defmodule BetsWeb.UserAuth do
     conn
     |> put_session(:user_token, token)
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
+  end
+
+  defp put_user_in_session(conn, user) do
+    conn
+    |> put_session(:current_user, user)
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do

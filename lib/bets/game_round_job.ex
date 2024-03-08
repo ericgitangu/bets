@@ -16,7 +16,7 @@ defmodule Bets.Games.GameRoundJob do
       {:ok, _game} ->
         Endpoint.broadcast("games:lobby", "game_started", %{game_id: game_id})
       {:error, reason} ->
-        IO.inspect("Failed to start game: #{reason}", label: "GameRoundJob Failed to start game")
+        # IO.inspect("Failed to start game: #{reason}", label: "GameRoundJob Failed to start game")
     end
 
     # Simulate game round duration of 2 minutes
@@ -26,7 +26,7 @@ defmodule Bets.Games.GameRoundJob do
       {:ok, game_result} ->
         Endpoint.broadcast("games:lobby", "game_ended", %{game_id: game_id, winner: game_result})
       _ ->
-        IO.inspect("Failed to end game", label: "GameRoundJob Failed to start game")
+        # IO.inspect("Failed to end game", label: "GameRoundJob Failed to start game")
     end
 
   #   # Schedule the next game round to start in 2 minutes

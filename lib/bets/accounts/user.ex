@@ -105,7 +105,7 @@ defmodule Bets.Accounts.User do
 
   def valid_password?(%Bets.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
-    Bcrypt.verify_pass(password, hashed_password)
+        Bcrypt.verify_pass(password, hashed_password)
   end
 
   def valid_password?(_, _) do
@@ -203,7 +203,7 @@ end
   """
   def create_user(attrs \\ {}) do
     try do
-      hashed_password = Bcrypt.hash_pwd_salt(attrs["name"] <> attrs["email"])
+      hashed_password = Bcrypt.hash_pwd_salt(attrs["password"])
       attrs = Map.put(attrs, "hashed_password", hashed_password)
       attrs = Map.put(attrs, "confirmed_at", DateTime.utc_now() |> NaiveDateTime.truncate(:second))
       
@@ -213,6 +213,7 @@ end
     rescue
       exception ->
         {:error, exception}
+        IO.inspect(exception, label: "exception")
     end
   end
 

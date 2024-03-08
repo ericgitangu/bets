@@ -14,9 +14,9 @@
   <body class="bg-white antialiased">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
     <%!-- <%= IO.inspect(@conn, label: "Conn+++++++++++++********************") %> --%>
-      <%= if @conn.private.plug_session["current_user"]  do %>
+      <%= if @conn.private.plug_session["current_user"] do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @conn.private.plug_session["current_user"].name %>
+          <%= @conn.private.plug_session["current_user"].name  %>
         </li>
         <li>
           <.link
