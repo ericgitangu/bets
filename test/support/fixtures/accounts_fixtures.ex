@@ -28,4 +28,48 @@ defmodule Bets.AccountsFixtures do
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")
     token
   end
+
+  @doc """
+  Generate a user.
+  """
+  def user_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> Enum.into(%{
+        admin_id: 42,
+        bet_id: 42,
+        confirmed_at: ~N[2024-03-06 10:23:00],
+        email: "some email",
+        game_id: 42,
+        hashed_password: "some hashed_password",
+        name: "some name",
+        player_id: 42,
+        role: :status
+      })
+      |> Bets.Accounts.create_user()
+
+    user
+  end
+
+  @doc """
+  Generate a user.
+  """
+  def user_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> Enum.into(%{
+        admin_id: 42,
+        bet_id: 42,
+        confirmed_at: ~N[2024-03-06 10:25:00],
+        email: "some email",
+        game_id: 42,
+        hashed_password: "some hashed_password",
+        name: "some name",
+        player_id: 42,
+        role: :status
+      })
+      |> Bets.Accounts.create_user()
+
+    user
+  end
 end

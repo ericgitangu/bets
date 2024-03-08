@@ -34,9 +34,14 @@ defmodule BetsWeb.UserSessionController do
     end
   end
 
-  def delete(conn, _params) do
+  def delete(conn, params) do
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> UserAuth.log_out_user()
+    |> assign(:current_user, nil)
+    |> put_session(:current_user, nil)
+    |> delete_resp_cookie("authorization")
+    |> configure_session(drop: true)
+    |> redirect(to: "/")
   end
 end

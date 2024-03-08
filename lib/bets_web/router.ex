@@ -13,7 +13,7 @@ defmodule BetsWeb.Router do
     plug :fetch_current_user
     plug Bets.Plugs.Authenticate
     plug :put_user_token
-    plug Bets.Plugs.SuperUser
+    # plug Bets.Plugs.SuperUser
 
   end
 
@@ -31,25 +31,31 @@ defmodule BetsWeb.Router do
   end
 
   # Routes for frontend users
-  scope "/frontendusers", BetsWeb do
+  scope "/users", BetsWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/new", FrontendUserLive.Index, :new
-    live "/:id/update", FrontendUserLive.Index, :update
-    live "/:id/edit", FrontendUserLive.Index, :edit
-    live "/:id/show", FrontendUserLive.Index, :show
-    live "/show/:id", FrontendUserLive.Index, :show
-    live "/", FrontendUserLive.Index, :index
+    live "/new", UserLive.Index, :new
+    live "/:id/update", UserLive.Index, :update
+    live "/:id/edit", UserLive.Index, :edit
+    live "/:id/show", UserLive.Index, :show
+    live "/", UserLive.Index, :index
   end
 
   scope "/", BetsWeb do
     pipe_through :browser
-     live "/", GameLive.Index, :index
+      
+    live "/", DashboardLive.Index, :index
+    live "/dashboards/new", DashboardLive.Index, :new
+    live "/dashboards/:id/edit", DashboardLive.Index, :edit
+
+    live "/dashboards/:id", DashboardLive.Show, :show
+    live "/dashboards/:id/show/edit", DashboardLive.Show, :edit
   end
 
   scope "/games", BetsWeb do
     pipe_through [:browser, :require_super_user]
 
+    live "/", GameLive.Show, :index
     live "/new", GameLive.Index, :new
     live "/:id/edit", GameLive.Index, :edit
 
@@ -59,7 +65,7 @@ defmodule BetsWeb.Router do
 
   # Routes for admins
   scope "/admins", BetsWeb do
-    pipe_through [:browser, :require_super_user]
+    pipe_through :browser
 
     live "/new", AdminLive.Index, :new
     live "/:id/edit", AdminLive, :edit
@@ -122,7 +128,7 @@ defmodule BetsWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{BetsWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: BetsWeb.UserAuth do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

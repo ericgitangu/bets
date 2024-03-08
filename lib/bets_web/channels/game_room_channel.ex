@@ -9,16 +9,39 @@ defmodule BetsWeb.GameRoomChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
+
   @impl true
-  def handle_in("game_started", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  def handle_in("bet_placed", payload, socket) do
+    IO.inspect(payload, label: "Incoming payload from client:")
+    {:reply, {:ok, %{games: "Here are the games"}}, socket}
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (game_room:lobby).
+  @impl true
+  def handle_in("place_bet", payload, socket) do
+    IO.inspect(payload, label: "Incoming payload from client:")
+    {:reply, {:ok, %{bet: "Bet placed"}}, socket}
+  end
+
+  @impl true
+  def handle_in("game_started", payload, socket) do
+    IO.inspect(payload, label: "Incoming payload from client:")
+    {:reply, {:ok, %{game: "Game started"}}, socket}
+  end
+
   @impl true
   def handle_in("game_ended", payload, socket) do
-    broadcast(socket, "Game round has ended!", payload)
+    IO.inspect(payload, label: "Incoming payload from client:")
+    {:reply, {:ok, %{game: "Game ended"}}, socket}
+  end
+
+  @impl true
+  def handle_out("game_started", %{game_id: game_id}, socket) do
+    broadcast!(socket, "game_started", %{game_id: game_id})
+    {:noreply, socket}
+  end
+
+  def handle_out("game_ended", %{game_id: game_id, winner: winner}, socket) do
+    broadcast!(socket, "game_ended", %{game_id: game_id, winner: winner})
     {:noreply, socket}
   end
 end

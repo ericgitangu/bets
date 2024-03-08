@@ -4,11 +4,12 @@ defmodule Bets.Admins.Admin do
 
   schema "admins" do
     field :name, :string
+    field :email, :string
+    field :role, Ecto.Enum, values: [:admin, :superuser], default: :admin
     field :user_id, :integer
-    field :frontend_user_id, :integer
+    field :frontenduser_id, :integer
     field :game_id, :integer
     field :bet_id, :integer
-    field :admin_id, :integer
 
     has_many :games, Bets.Games.Game
     has_many :frontend_users, Bets.FrontendUsers.FrontendUser
@@ -21,7 +22,8 @@ defmodule Bets.Admins.Admin do
   @doc false
   def changeset(admin, attrs) do
     admin
-    |> cast(attrs, [:name, :user_id, :frontend_user_id, :game_id, :bet_id])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :email, :role, :user_id, :frontenduser_id, :game_id, :bet_id])
+    |> validate_required([:name, :email, :role])
+    |> unique_constraint(:email)
   end
 end

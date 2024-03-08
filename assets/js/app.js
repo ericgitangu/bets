@@ -45,3 +45,10 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+document.addEventListener('click', function (e) {
+	if (e.target.classList.contains('modal-background')) {
+		const modal = e.target.closest('.modal');
+		modal.classList.add('hidden');
+	}
+});

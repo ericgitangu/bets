@@ -13,9 +13,10 @@
   </head>
   <body class="bg-white antialiased">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user   do %>
+    <%!-- <%= IO.inspect(@conn, label: "Conn+++++++++++++********************") %> --%>
+      <%= if @conn.private.plug_session["current_user"]  do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
+          <%= @conn.private.plug_session["current_user"].name %>
         </li>
         <li>
           <.link
@@ -45,7 +46,7 @@
         </li>
         <li>
           <.link
-            href={~p"/users/log_in"}
+            href={"/users/log_in"}
             class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
             Login  or &nbsp;&rarr;
@@ -54,7 +55,7 @@
       <% end %>
       <%= if @conn.private.plug_session["current_user"] do %>
         <.link
-          href={~p"/auth/logout"}
+          href={"/auth/logout"}
           method="delete"
           class="block py-2 px-4 text-sm text-gray-700 hover:text-zinc-700"
         >
@@ -76,5 +77,7 @@
     </ul>
     <%= @inner_content %>
   </body>
-  <script>window.userToken = "<%= assigns[:user_token] %>";</script>
+  <script>
+    window.csrfToken = "<%= get_csrf_token() %>";
+  </script>
 </html>

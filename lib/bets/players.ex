@@ -107,7 +107,7 @@ defmodule Bets.Players do
     Player.changeset(player, attrs)
   end
 
-  def get_or_create_user(_conn, attrs) do
+  def get_or_create_player(_conn, attrs) do
     case Repo.get_by(Player, user_id: "#attrs.user_id") do
       nil -> create_player(attrs)
       {:error, _reason} = error -> error

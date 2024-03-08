@@ -62,7 +62,9 @@ defmodule Bets.MixProject do
       {:ueberauth, "~> 0.7"},
       {:ueberauth_github, "~> 0.8"},
       {:ueberauth_google, "~> 0.9"},
-      {:oban, "~> 2.17"}
+      {:oban, "~> 2.17"},
+      {:poison, "~> 4.0"},
+      {:paginator, "~> 1.2.0"}
     ]
   end
 

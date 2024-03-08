@@ -13,10 +13,10 @@ defmodule BetsWeb.AuthController do
   def callback_phase(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     token = auth.credentials.token
     name = auth.info.name
-    user_creation_result = User.get_or_create_user(conn, auth.info)
+    user_creation_result = User.get_or_create_user(auth.info)
     assign_current_user(conn, token)
     case user_creation_result do
-    {:ok, user} ->
+      {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome back #{name}!")
         |> assign(:current_user, auth.info)
@@ -24,7 +24,15 @@ defmodule BetsWeb.AuthController do
         |> put_session(:token, token)
         |> put_session("authorization", "Token Bearer: #{token}")
         |> redirect(to: "/")
-    {:error, reason} ->
+      {:error, reason} when reason == "User already exists!" ->
+        conn
+        |> put_flash(:info, "Welcome back #{name}!")
+        |> assign(:current_user, auth.info)
+        |> put_session(:current_user, auth.info)
+        |> put_session(:token, token)
+        |> put_session("authorization", "Token Bearer: #{token}")
+        |> redirect(to: "/")
+      {:error, reason} ->
         conn
         |> put_flash(:error, reason)
         |> redirect(to: "/")

@@ -6,12 +6,16 @@
     </.link>
   </:actions>
 </.header>
+
 <.table
   id="games"
   rows={@streams.games}
   row_click={fn {_id, game} -> JS.navigate(~p"/games/#{game}") end}
 >
   <:col :let={{_id, game}} label="Name"><%= game.name %></:col>
+  <:col :let={{_id, game}} label="Game time"><%= game.game_time %></:col>
+  <:col :let={{_id, game}} label="User"><%= game.user_id %></:col>
+  <:col :let={{_id, game}} label="Status"><%= game.status %></:col>
   <:action :let={{_id, game}}>
     <div class="sr-only">
       <.link navigate={~p"/games/#{game}"}>Show</.link>
@@ -28,13 +32,13 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="game-modal" show on_cancel={JS.patch(~p"/")}>
+<.modal :if={@live_action in [:new, :edit]} id="game-modal" show on_cancel={JS.patch(~p"/games")}>
   <.live_component
     module={BetsWeb.GameLive.FormComponent}
     id={@game.id || :new}
     title={@page_title}
     action={@live_action}
     game={@game}
-    patch={~p"/games"}
+    patch={~p"/"}
   />
 </.modal>

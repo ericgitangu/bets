@@ -3,3 +3,19 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+# Style the modal
+.modal {
+  @apply fixed w-full h-full top-0 left-0 flex items-center justify-center;
+}
+
+.modal-background {
+  @apply absolute w-full h-full bg-gray-900 opacity-50;
+}
+
+.modal-content {
+  @apply bg-white p-6 rounded shadow-lg text-left;
+}
+
+.modal-close {
+  @apply absolute top-0 right-0 cursor-pointer;
+}
