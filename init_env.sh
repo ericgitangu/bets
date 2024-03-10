@@ -13,7 +13,7 @@ export GOOGLE_REDIRECT_URI="http://localhost:4000/auth/google/callback"
 
 # GitHub OAuth Configuration
 export GITHUB_CLIENT_ID="1f35556226498c58cdb5"
-export GITHUB_CLIENT_SECRET="1f35556226498c58cdb5"
+export GITHUB_CLIENT_SECRET="ad5ed39ae8bd566b1bedd467f7e33485a58171f3"
 export GITHUB_REDIRECT_URI="http://localhost:4000/auth/github/callback"
 
 # Any other environment variables your MVP might need

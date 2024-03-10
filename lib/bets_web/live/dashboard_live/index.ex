@@ -8,15 +8,19 @@ defmodule BetsWeb.DashboardLive.Index do
   def render(assigns) do
     ~H"""
     <div class="dashboard">
-      <h1>Dashboard</h1>
+      <h1 class="mb-2 font-bold text-center">Dashboard</h1>
       <div class="analytics">
-        <%= for game <- Bets.Games.list_games() do %>
           <div class="game">
-            <h2><%= game.name %></h2>
-            <p>Number of players: <%= game.num_players %></p>
-            <p>Revenue: <%= game.revenue %></p>
+            <hr/>
+            <ul class ="list-disc text-sm my-2 ">
+              <%= for game <- Bets.Games.list_games() do %>
+                <li class="leading-8"><%= game.name %></li>
+                <li class="leading-8">Start time: <%= game.game_time %></li>
+                <li class="leading-8">Status: <%= game.status %></li>
+              <% end %>
+            </ul>
+            <hr/>
           </div>
-        <% end %>
       </div>
     </div>
     """

@@ -19,7 +19,7 @@ defmodule BetsWeb.GameRoomChannel do
   @impl true
   def join("game:lobby", payload, socket) do
     Logger.info("User just joined the betting lobby with payload: #{inspect(payload)}")
-    {:ok, %{Welcome: "You've successfully joined the betting lobby"}, socket}
+    {:ok, %{Welcome: "Successfully joined the betting lobby"}, socket}
   end
 
   # Channels can be used in a request/response fashion
