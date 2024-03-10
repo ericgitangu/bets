@@ -8,7 +8,14 @@ defmodule Bets.DashboardsTest do
 
     import Bets.DashboardsFixtures
 
-    @invalid_attrs %{amount: nil, upcoming_games: nil, past_games: nil, past_games_winner: nil, count_down: nil, game_genre: nil}
+    @invalid_attrs %{
+      amount: nil,
+      upcoming_games: nil,
+      past_games: nil,
+      past_games_winner: nil,
+      count_down: nil,
+      game_genre: nil
+    }
 
     test "list_dashboards/0 returns all dashboards" do
       dashboard = dashboard_fixture()
@@ -21,7 +28,14 @@ defmodule Bets.DashboardsTest do
     end
 
     test "create_dashboard/1 with valid data creates a dashboard" do
-      valid_attrs = %{amount: "120.5", upcoming_games: "some upcoming_games", past_games: "some past_games", past_games_winner: "some past_games_winner", count_down: "some count_down", game_genre: :football}
+      valid_attrs = %{
+        amount: "120.5",
+        upcoming_games: "some upcoming_games",
+        past_games: "some past_games",
+        past_games_winner: "some past_games_winner",
+        count_down: "some count_down",
+        game_genre: :football
+      }
 
       assert {:ok, %Dashboard{} = dashboard} = Dashboards.create_dashboard(valid_attrs)
       assert dashboard.amount == Decimal.new("120.5")
@@ -38,9 +52,19 @@ defmodule Bets.DashboardsTest do
 
     test "update_dashboard/2 with valid data updates the dashboard" do
       dashboard = dashboard_fixture()
-      update_attrs = %{amount: "456.7", upcoming_games: "some updated upcoming_games", past_games: "some updated past_games", past_games_winner: "some updated past_games_winner", count_down: "some updated count_down", game_genre: :football}
 
-      assert {:ok, %Dashboard{} = dashboard} = Dashboards.update_dashboard(dashboard, update_attrs)
+      update_attrs = %{
+        amount: "456.7",
+        upcoming_games: "some updated upcoming_games",
+        past_games: "some updated past_games",
+        past_games_winner: "some updated past_games_winner",
+        count_down: "some updated count_down",
+        game_genre: :football
+      }
+
+      assert {:ok, %Dashboard{} = dashboard} =
+               Dashboards.update_dashboard(dashboard, update_attrs)
+
       assert dashboard.amount == Decimal.new("456.7")
       assert dashboard.upcoming_games == "some updated upcoming_games"
       assert dashboard.past_games == "some updated past_games"

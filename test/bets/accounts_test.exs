@@ -511,7 +511,17 @@ defmodule Bets.AccountsTest do
 
     import Bets.AccountsFixtures
 
-    @invalid_attrs %{name: nil, role: nil, email: nil, hashed_password: nil, confirmed_at: nil, game_id: nil, bet_id: nil, admin_id: nil, player_id: nil}
+    @invalid_attrs %{
+      name: nil,
+      role: nil,
+      email: nil,
+      hashed_password: nil,
+      confirmed_at: nil,
+      game_id: nil,
+      bet_id: nil,
+      admin_id: nil,
+      player_id: nil
+    }
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -524,7 +534,17 @@ defmodule Bets.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{name: "some name", role: :status, email: "some email", hashed_password: "some hashed_password", confirmed_at: ~N[2024-03-06 10:23:00], game_id: 42, bet_id: 42, admin_id: 42, player_id: 42}
+      valid_attrs = %{
+        name: "some name",
+        role: :status,
+        email: "some email",
+        hashed_password: "some hashed_password",
+        confirmed_at: ~N[2024-03-06 10:23:00],
+        game_id: 42,
+        bet_id: 42,
+        admin_id: 42,
+        player_id: 42
+      }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.name == "some name"
@@ -544,7 +564,18 @@ defmodule Bets.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{name: "some updated name", role: :user, email: "some updated email", hashed_password: "some updated hashed_password", confirmed_at: ~N[2024-03-07 10:23:00], game_id: 43, bet_id: 43, admin_id: 43, player_id: 43}
+
+      update_attrs = %{
+        name: "some updated name",
+        role: :user,
+        email: "some updated email",
+        hashed_password: "some updated hashed_password",
+        confirmed_at: ~N[2024-03-07 10:23:00],
+        game_id: 43,
+        bet_id: 43,
+        admin_id: 43,
+        player_id: 43
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.name == "some updated name"
@@ -581,7 +612,17 @@ defmodule Bets.AccountsTest do
 
     import Bets.AccountsFixtures
 
-    @invalid_attrs %{name: nil, role: nil, email: nil, hashed_password: nil, confirmed_at: nil, game_id: nil, bet_id: nil, admin_id: nil, player_id: nil}
+    @invalid_attrs %{
+      name: nil,
+      role: nil,
+      email: nil,
+      hashed_password: nil,
+      confirmed_at: nil,
+      game_id: nil,
+      bet_id: nil,
+      admin_id: nil,
+      player_id: nil
+    }
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -594,7 +635,17 @@ defmodule Bets.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{name: "some name", role: :status, email: "some email", hashed_password: "some hashed_password", confirmed_at: ~N[2024-03-06 10:25:00], game_id: 42, bet_id: 42, admin_id: 42, player_id: 42}
+      valid_attrs = %{
+        name: "some name",
+        role: :status,
+        email: "some email",
+        hashed_password: "some hashed_password",
+        confirmed_at: ~N[2024-03-06 10:25:00],
+        game_id: 42,
+        bet_id: 42,
+        admin_id: 42,
+        player_id: 42
+      }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.name == "some name"
@@ -614,7 +665,18 @@ defmodule Bets.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{name: "some updated name", role: :user, email: "some updated email", hashed_password: "some updated hashed_password", confirmed_at: ~N[2024-03-07 10:25:00], game_id: 43, bet_id: 43, admin_id: 43, player_id: 43}
+
+      update_attrs = %{
+        name: "some updated name",
+        role: :user,
+        email: "some updated email",
+        hashed_password: "some updated hashed_password",
+        confirmed_at: ~N[2024-03-07 10:25:00],
+        game_id: 43,
+        bet_id: 43,
+        admin_id: 43,
+        player_id: 43
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.name == "some updated name"

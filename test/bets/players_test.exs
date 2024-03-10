@@ -8,7 +8,14 @@ defmodule Bets.PlayersTest do
 
     import Bets.PlayersFixtures
 
-    @invalid_attrs %{role: nil, first_name: nil, last_name: nil, email: nil, encrypted_password: nil, msisdn: nil}
+    @invalid_attrs %{
+      role: nil,
+      first_name: nil,
+      last_name: nil,
+      email: nil,
+      encrypted_password: nil,
+      msisdn: nil
+    }
 
     test "list_players/0 returns all players" do
       player = player_fixture()
@@ -21,7 +28,14 @@ defmodule Bets.PlayersTest do
     end
 
     test "create_player/1 with valid data creates a player" do
-      valid_attrs = %{role: :user, first_name: "some first_name", last_name: "some last_name", email: "some email", encrypted_password: "some encrypted_password", msisdn: "some msisdn"}
+      valid_attrs = %{
+        role: :user,
+        first_name: "some first_name",
+        last_name: "some last_name",
+        email: "some email",
+        encrypted_password: "some encrypted_password",
+        msisdn: "some msisdn"
+      }
 
       assert {:ok, %Player{} = player} = Players.create_player(valid_attrs)
       assert player.role == :user
@@ -38,7 +52,15 @@ defmodule Bets.PlayersTest do
 
     test "update_player/2 with valid data updates the player" do
       player = player_fixture()
-      update_attrs = %{role: :user, first_name: "some updated first_name", last_name: "some updated last_name", email: "some updated email", encrypted_password: "some updated encrypted_password", msisdn: "some updated msisdn"}
+
+      update_attrs = %{
+        role: :user,
+        first_name: "some updated first_name",
+        last_name: "some updated last_name",
+        email: "some updated email",
+        encrypted_password: "some updated encrypted_password",
+        msisdn: "some updated msisdn"
+      }
 
       assert {:ok, %Player{} = player} = Players.update_player(player, update_attrs)
       assert player.role == :user

@@ -1,5 +1,6 @@
 defmodule BetsWeb.UserSocket do
   use Phoenix.Socket
+  require Logger
 
   # A Socket handler
   #
@@ -40,7 +41,11 @@ defmodule BetsWeb.UserSocket do
       {:ok, id} ->
         {:ok, assign(socket, :user, id)}
 
-      {:error, reason} ->
+      {:error, error} ->
+        Logger.error(
+          "Failed to connect to user socket, must be authenticated: #{error} user id match"
+        )
+
         :error
     end
   end
@@ -51,6 +56,7 @@ defmodule BetsWeb.UserSocket do
   def(id(socket)) do
     "user_socket:#{socket.assigns.user}"
   end
+
   #
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
@@ -58,5 +64,4 @@ defmodule BetsWeb.UserSocket do
   #     Elixir.DiscussWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-
 end

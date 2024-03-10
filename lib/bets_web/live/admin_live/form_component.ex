@@ -19,13 +19,7 @@ defmodule BetsWeb.AdminLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input
-          field={@form[:name]}
-          type="text"
-          label="Name"
-          autocomplete="off"
-          list="users-list"
-        >
+        <.input field={@form[:name]} type="text" label="Name" autocomplete="off" list="users-list">
         </.input>
         <.input field={@form[:email]} type="email" label="Email" />
         <.input
@@ -33,7 +27,8 @@ defmodule BetsWeb.AdminLive.FormComponent do
           type="select"
           label="Role"
           prompt="Choose a value"
-          options={Ecto.Enum.values(Bets.Admins.Admin, :role)}/>
+          options={Ecto.Enum.values(Bets.Admins.Admin, :role)}
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Admin</.button>
         </:actions>

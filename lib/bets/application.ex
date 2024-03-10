@@ -7,6 +7,7 @@ defmodule Bets.Application do
   @impl true
   def start(_type, _args) do
     Oban.Telemetry.attach_default_logger()
+
     children = [
       BetsWeb.Telemetry,
       Bets.Repo,
@@ -21,6 +22,7 @@ defmodule Bets.Application do
       # Start to serve requests, typically the last entry
       BetsWeb.Endpoint
     ]
+
     opts = [strategy: :one_for_one, name: Bets.Supervisor]
     Supervisor.start_link(children, opts)
   end

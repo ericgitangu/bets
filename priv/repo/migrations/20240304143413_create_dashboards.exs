@@ -16,6 +16,7 @@ defmodule Bets.Repo.Migrations.CreateDashboards do
 
       timestamps(type: :utc_datetime)
     end
+
     create index(:dashboards, [:user_id])
     create index(:dashboards, [:game_id])
     create index(:dashboards, [:player_id])

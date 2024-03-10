@@ -4,8 +4,18 @@ defmodule BetsWeb.GameLiveTest do
   import Phoenix.LiveViewTest
   import Bets.GamesFixtures
 
-  @create_attrs %{name: "some name", status: :upcoming, game_time: "2024-03-03T13:53:00", user_id: 42}
-  @update_attrs %{name: "some updated name", status: :upcoming, game_time: "2024-03-04T13:53:00", user_id: 43}
+  @create_attrs %{
+    name: "some name",
+    status: :upcoming,
+    game_time: "2024-03-03T13:53:00",
+    user_id: 42
+  }
+  @update_attrs %{
+    name: "some updated name",
+    status: :upcoming,
+    game_time: "2024-03-04T13:53:00",
+    user_id: 43
+  }
   @invalid_attrs %{name: nil, status: nil, game_time: nil, user_id: nil}
 
   defp create_game(_) do

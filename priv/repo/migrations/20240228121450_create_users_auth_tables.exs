@@ -13,11 +13,9 @@ defmodule Bets.Repo.Migrations.CreateUsersAuthTables do
       add :user_id, :integer
 
       timestamps(type: :utc_datetime)
-
     end
 
     create unique_index(:users, [:email])
-
 
     create table(:users_tokens) do
       add :user_id, references(:users, on_delete: :delete_all), null: false

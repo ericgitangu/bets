@@ -4,9 +4,39 @@ defmodule BetsWeb.UserLiveTest do
   import Phoenix.LiveViewTest
   import Bets.AccountsFixtures
 
-  @create_attrs %{name: "some name", role: :status, email: "some email", hashed_password: "some hashed_password", confirmed_at: "2024-03-06T10:25:00", game_id: 42, bet_id: 42, admin_id: 42, player_id: 42}
-  @update_attrs %{name: "some updated name", role: :user, email: "some updated email", hashed_password: "some updated hashed_password", confirmed_at: "2024-03-07T10:25:00", game_id: 43, bet_id: 43, admin_id: 43, player_id: 43}
-  @invalid_attrs %{name: nil, role: nil, email: nil, hashed_password: nil, confirmed_at: nil, game_id: nil, bet_id: nil, admin_id: nil, player_id: nil}
+  @create_attrs %{
+    name: "some name",
+    role: :status,
+    email: "some email",
+    hashed_password: "some hashed_password",
+    confirmed_at: "2024-03-06T10:25:00",
+    game_id: 42,
+    bet_id: 42,
+    admin_id: 42,
+    player_id: 42
+  }
+  @update_attrs %{
+    name: "some updated name",
+    role: :user,
+    email: "some updated email",
+    hashed_password: "some updated hashed_password",
+    confirmed_at: "2024-03-07T10:25:00",
+    game_id: 43,
+    bet_id: 43,
+    admin_id: 43,
+    player_id: 43
+  }
+  @invalid_attrs %{
+    name: nil,
+    role: nil,
+    email: nil,
+    hashed_password: nil,
+    confirmed_at: nil,
+    game_id: nil,
+    bet_id: nil,
+    admin_id: nil,
+    player_id: nil
+  }
 
   defp create_user(_) do
     user = user_fixture()

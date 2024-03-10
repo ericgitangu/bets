@@ -115,12 +115,16 @@ defmodule Bets.Games do
 
   """
   def start_game(%{"id" => id}) do
-    game = get_game!(id) # Retrieve the game record using `get_game!` function
+    # Retrieve the game record using `get_game!` function
+    game = get_game!(id)
 
-    updated_game = update_game(game, %{status: "started"}) # Update the game status
+    # Update the game status
+    updated_game = update_game(game, %{status: "started"})
 
-    {:ok, updated_game} # Return the updated game record
+    # Return the updated game record
+    {:ok, updated_game}
   end
+
   @doc """
   Ends a game.
 
@@ -134,19 +138,23 @@ defmodule Bets.Games do
 
   """
   def end_game(%{"id" => id}) do
-    game = get_game!(id) # Retrieve the game record using `get_game!` function
-    updated_game = update_game(game, %{status: "completed"}) # Update the game status
-    player = Repo.get(Player, game.player_id) # Retrieve the player record based on the game's player_id field
-    {:ok, {updated_game, player}} # Return the updated game record and player record as a tuple
+    # Retrieve the game record using `get_game!` function
+    game = get_game!(id)
+    # Update the game status
+    updated_game = update_game(game, %{status: "completed"})
+    # Retrieve the player record based on the game's player_id field
+    player = Repo.get(Player, game.player_id)
+    # Return the updated game record and player record as a tuple
+    {:ok, {updated_game, player}}
   end
 
-  def get_past_games(page \\ 1, per_page \\ 10) do
+  def get_past_games(_page \\ 1, per_page \\ 10) do
     query = from(g in Game, order_by: [asc: g.game_at, asc: g.id])
+
     Game
     |> where([g], g.created_at <= ^DateTime.utc_now())
     |> order_by(desc: :created_at)
     |> Repo.paginate(query, cursor_fields: [:game_at, :id], limit: per_page)
     |> Repo.all()
   end
-
 end

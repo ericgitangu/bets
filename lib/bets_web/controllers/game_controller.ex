@@ -16,11 +16,12 @@ defmodule BetsWeb.GameController do
   end
 
   def create(conn, %{"game" => game_params}) do
+    changeset =
+      conn.assigns.current_user
+      |> build_assoc(:games)
+      |> build_assoc(:bets)
+      |> Game.changeset(game_params)
 
-    changeset = conn.assigns.current_user
-    |> build_assoc(:games)
-    |> build_assoc(:bets)
-    |> Game.changeset(game_params)
     case Bets.Repo.insert(changeset) do
       {:ok, game} ->
         conn

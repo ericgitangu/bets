@@ -4,9 +4,30 @@ defmodule BetsWeb.DashboardLiveTest do
   import Phoenix.LiveViewTest
   import Bets.DashboardsFixtures
 
-  @create_attrs %{amount: "120.5", upcoming_games: "some upcoming_games", past_games: "some past_games", past_games_winner: "some past_games_winner", count_down: "some count_down", game_genre: :football}
-  @update_attrs %{amount: "456.7", upcoming_games: "some updated upcoming_games", past_games: "some updated past_games", past_games_winner: "some updated past_games_winner", count_down: "some updated count_down", game_genre: :football}
-  @invalid_attrs %{amount: nil, upcoming_games: nil, past_games: nil, past_games_winner: nil, count_down: nil, game_genre: nil}
+  @create_attrs %{
+    amount: "120.5",
+    upcoming_games: "some upcoming_games",
+    past_games: "some past_games",
+    past_games_winner: "some past_games_winner",
+    count_down: "some count_down",
+    game_genre: :football
+  }
+  @update_attrs %{
+    amount: "456.7",
+    upcoming_games: "some updated upcoming_games",
+    past_games: "some updated past_games",
+    past_games_winner: "some updated past_games_winner",
+    count_down: "some updated count_down",
+    game_genre: :football
+  }
+  @invalid_attrs %{
+    amount: nil,
+    upcoming_games: nil,
+    past_games: nil,
+    past_games_winner: nil,
+    count_down: nil,
+    game_genre: nil
+  }
 
   defp create_dashboard(_) do
     dashboard = dashboard_fixture()
@@ -93,7 +114,7 @@ defmodule BetsWeb.DashboardLiveTest do
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Dashboard"
 
-      assert_patch(show_live, ~p"/dashboards/#{dashboard}/show/edit")
+      assert_patch(show_live, ~p"/dashboards/ch#{dashboard}/show/edit")
 
       assert show_live
              |> form("#dashboard-form", dashboard: @invalid_attrs)
@@ -109,23 +130,26 @@ defmodule BetsWeb.DashboardLiveTest do
       assert html =~ "Dashboard updated successfully"
       assert html =~ "some updated upcoming_games"
     end
+
+    # Additional tests
+    test "renders upcoming and past games", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/dashboard")
+
+      # Assuming you have a setup function to insert mock games into your database
+      upcoming_games = insert_upcoming_games()
+      past_games = insert_past_games()
+
+      assert render(view) =~ "Upcoming Games"
+
+      Enum.each(upcoming_games, fn game ->
+        assert render(view) =~ "#{game.name}"
+      end)
+
+      assert render(view) =~ "Past Games"
+
+      Enum.each(past_games, fn game ->
+        assert render(view) =~ "#{game.name} - Winner: #{game.winner}"
+      end)
+    end
   end
-
-  # defined tests [Belo]
-  test "renders upcoming and past games", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/dashboard")
-
-    # Assuming you have a setup function to insert mock games into your database
-    upcoming_games = insert_upcoming_games()
-    past_games = insert_past_games()
-
-    assert render(view) =~ "Upcoming Games"
-    Enum.each(upcoming_games, fn game ->
-      assert render(view) =~ "#{game.name}"
-    end)
-
-    assert render(view) =~ "Past Games"
-    Enum.each(past_games, fn game ->
-      assert render(view) =~ "#{game.name} - Winner: #{game.winner}"
-    end)
 end

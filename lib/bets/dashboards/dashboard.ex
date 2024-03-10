@@ -20,7 +20,25 @@ defmodule Bets.Dashboards.Dashboard do
   @doc false
   def changeset(dashboard, attrs) do
     dashboard
-    |> cast(attrs, [:amount, :upcoming_games, :past_games, :past_games_winner, :count_down, :game_genre, :user_id, :game_id, :player_id, :bet_id])
-    |> validate_required([:amount, :upcoming_games, :past_games, :past_games_winner, :count_down, :game_genre])
+    |> cast(attrs, [
+      :amount,
+      :upcoming_games,
+      :past_games,
+      :past_games_winner,
+      :count_down,
+      :game_genre,
+      :user_id,
+      :game_id,
+      :player_id,
+      :bet_id
+    ])
+    |> validate_required([
+      :amount,
+      :upcoming_games,
+      :past_games,
+      :past_games_winner,
+      :count_down,
+      :game_genre
+    ])
   end
 end

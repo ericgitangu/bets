@@ -14,7 +14,12 @@
 
 <.back navigate={~p"/admins"}>Back to admins</.back>
 
-<.modal :if={@live_action == :edit} id="admin-modal" show on_cancel={JS.patch(~p"/admins/#{@admin}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="admin-modal"
+  show
+  on_cancel={JS.patch(~p"/admins/#{@admin}")}
+>
   <.live_component
     module={BetsWeb.AdminLive.FormComponent}
     id={@admin.id}

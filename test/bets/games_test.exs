@@ -35,7 +35,12 @@ defmodule Bets.GamesTest do
 
     test "update_game/2 with valid data updates the game" do
       game = game_fixture()
-      update_attrs = %{name: "some updated name", status: "some updated status", game_time: "2024-02-28T21:56:45Z"}
+
+      update_attrs = %{
+        name: "some updated name",
+        status: "some updated status",
+        game_time: "2024-02-28T21:56:45Z"
+      }
 
       assert {:ok, %Game{} = game} = Games.update_game(game, update_attrs)
       assert game.name == "some updated name"
@@ -133,7 +138,12 @@ defmodule Bets.GamesTest do
     end
 
     test "create_game/1 with valid data creates a game" do
-      valid_attrs = %{name: "some name", status: :upcoming, game_time: ~N[2024-03-03 13:53:00], user_id: 42}
+      valid_attrs = %{
+        name: "some name",
+        status: :upcoming,
+        game_time: ~N[2024-03-03 13:53:00],
+        user_id: 42
+      }
 
       assert {:ok, %Game{} = game} = Games.create_game(valid_attrs)
       assert game.name == "some name"
@@ -148,7 +158,13 @@ defmodule Bets.GamesTest do
 
     test "update_game/2 with valid data updates the game" do
       game = game_fixture()
-      update_attrs = %{name: "some updated name", status: :upcoming, game_time: ~N[2024-03-04 13:53:00], user_id: 43}
+
+      update_attrs = %{
+        name: "some updated name",
+        status: :upcoming,
+        game_time: ~N[2024-03-04 13:53:00],
+        user_id: 43
+      }
 
       assert {:ok, %Game{} = game} = Games.update_game(game, update_attrs)
       assert game.name == "some updated name"

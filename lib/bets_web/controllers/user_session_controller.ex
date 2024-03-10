@@ -1,5 +1,6 @@
 defmodule BetsWeb.UserSessionController do
   use BetsWeb, :controller
+  require Logger
 
   alias Bets.Accounts
   alias BetsWeb.UserAuth
@@ -36,6 +37,8 @@ defmodule BetsWeb.UserSessionController do
   end
 
   def delete(conn, params) do
+    Logger.info("Params: #{inspect(params)}")
+
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> UserAuth.log_out_user()

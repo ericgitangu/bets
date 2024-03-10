@@ -20,7 +20,18 @@ defmodule Bets.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :role, :email, :hashed_password, :confirmed_at, :user_id, :game_id, :bet_id, :player_id, :admin_id])
+    |> cast(attrs, [
+      :name,
+      :role,
+      :email,
+      :hashed_password,
+      :confirmed_at,
+      :user_id,
+      :game_id,
+      :bet_id,
+      :player_id,
+      :admin_id
+    ])
     |> validate_required([:name, :role, :email, :hashed_password, :confirmed_at])
   end
 end

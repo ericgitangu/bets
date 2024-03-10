@@ -1,16 +1,12 @@
 defmodule BetsWeb.DashboardLive.Index do
   use BetsWeb, :live_view
-
+  require Logger
   alias Bets.Dashboards
   alias Bets.Dashboards.Dashboard
-  alias Bets.Games
-  alias Bets.Games.Game
-  alias BetsWeb.BetModalComponent
-
 
   @impl true
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div class="dashboard">
       <h1>Dashboard</h1>
       <div class="analytics">
@@ -33,6 +29,7 @@ defmodule BetsWeb.DashboardLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
+    Logger.info("Handling params: #{inspect(params)} on socket: #{inspect(socket)}")
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -48,7 +45,7 @@ defmodule BetsWeb.DashboardLive.Index do
     |> assign(:dashboard, %Dashboard{})
   end
 
-  defp apply_action(socket, :index, params) do
+  defp apply_action(socket, :index, _params) do
     socket
     |> assign(:current_user, socket)
     |> assign(:page_title, "Listing Dashboards")
@@ -67,7 +64,7 @@ defmodule BetsWeb.DashboardLive.Index do
 
     {:noreply, stream_delete(socket, :dashboards, dashboard)}
   end
-  
+
   @impl true
   def handle_event("show_bet_modal", %{"id" => game_id}, socket) do
     {:noreply, assign(socket, bet_modal: true, selected_game_id: game_id)}
@@ -75,7 +72,6 @@ defmodule BetsWeb.DashboardLive.Index do
 
   @impl true
   def handle_event("logout", _params, socket) do
-    {:noreply, BetsWeb.UserAuth.logout(socket)}
+    {:noreply, BetsWeb.UserAuth.log_out_user(socket)}
   end
-  
 end

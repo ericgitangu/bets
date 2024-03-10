@@ -14,7 +14,12 @@
 
 <.back navigate={Routes.frontend_user_path(@socket, :index)}>Back to frontendusers</.back>
 
-<.modal :if={@live_action == :edit} id="frontend_user-modal" show on_cancel={JS.patch(~p"/frontendusers/#{@frontend_user}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="frontend_user-modal"
+  show
+  on_cancel={JS.patch(~p"/frontendusers/#{@frontend_user}")}
+>
   <.live_component
     module={BetsWeb.FrontendUserLive.FormComponent}
     id={@frontend_user.id}

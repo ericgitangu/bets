@@ -12,6 +12,7 @@ defmodule Bets.Repo.Migrations.CreateFrontendusers do
 
       timestamps(type: :utc_datetime)
     end
+
     create index(:frontendusers, [:user_id])
     create index(:frontendusers, [:game_id])
     create index(:frontendusers, [:bet_id])

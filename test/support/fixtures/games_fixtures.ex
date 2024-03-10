@@ -11,36 +11,6 @@ defmodule Bets.GamesFixtures do
     {:ok, game} =
       attrs
       |> Enum.into(%{
-        name: "some name",
-        status: "some status",
-        type: "some type"
-      })
-      |> Bets.Games.create_game()
-
-    game
-  end
-
-  @doc """
-  Generate a game.
-  """
-  def game_fixture(attrs \\ %{}) do
-    {:ok, game} =
-      attrs
-      |> Enum.into(%{
-        name: "some name"
-      })
-      |> Bets.Games.create_game()
-
-    game
-  end
-
-  @doc """
-  Generate a game.
-  """
-  def game_fixture(attrs \\ %{}) do
-    {:ok, game} =
-      attrs
-      |> Enum.into(%{
         game_time: ~N[2024-03-03 13:53:00],
         name: "some name",
         status: :upcoming,

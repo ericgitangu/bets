@@ -34,7 +34,7 @@ defmodule Bets.Players do
       ** (Ecto.NoResultsError)
 
   """
-  
+
   def create_players(attrs \\ %{}) do
     %Player{}
     |> Player.changeset(attrs)

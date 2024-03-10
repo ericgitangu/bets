@@ -1,17 +1,22 @@
 defmodule Bets.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  require Logger
 
   alias Bets.Repo
   alias Bets.Accounts.User
 
-  @derive {Jason.Encoder, only: [:id, :name, :email, :role, :confirmed_at, :game_id, :bet_id, :admin_id]}
+  @derive {Jason.Encoder,
+           only: [:id, :name, :email, :role, :confirmed_at, :game_id, :bet_id, :admin_id]}
   schema "users" do
     field :name, :string, default: ""
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    field :confirmed_at, :naive_datetime, default: DateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+    field :confirmed_at, :naive_datetime,
+      default: DateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
     field :role, Ecto.Enum, values: [:user, :admin, :superuser], default: :user
     field :game_id, :integer
     field :bet_id, :integer
@@ -24,9 +29,19 @@ defmodule Bets.Accounts.User do
 
     timestamps(type: :utc_datetime)
 
-  def changeset(user, attrs) do
+    def changeset(user, attrs) do
       user
-      |> cast(attrs, [:name, :email, :hashed_password, :confirmed_at, :role, :game_id, :bet_id, :admin_id, :player_id])
+      |> cast(attrs, [
+        :name,
+        :email,
+        :hashed_password,
+        :confirmed_at,
+        :role,
+        :game_id,
+        :bet_id,
+        :admin_id,
+        :player_id
+      ])
       |> validate_required([:name, :email])
       |> validate_format(:email, ~r/@/)
       |> validate_length(:password, min: 6, allow_nil: true)
@@ -105,7 +120,7 @@ defmodule Bets.Accounts.User do
 
   def valid_password?(%Bets.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
-        Bcrypt.verify_pass(password, hashed_password)
+    Bcrypt.verify_pass(password, hashed_password)
   end
 
   def valid_password?(_, _) do
@@ -135,78 +150,43 @@ defmodule Bets.Accounts.User do
   end
 
   @doc """
-  Gets a single user.
+    Creates a user using UeberAuth pattern matching.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
+    ## Examples
 
-  ## Examples
+        iex> create_user(%{field: value})
+        {:ok, %User{}}
 
-      iex> get_user!(123)
+        iex> create_user(%{field: bad_value})
+        {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user(%Ueberauth.Auth.Info{} = attrs) do
+    try do
+      hashed_password = Bcrypt.hash_pwd_salt(attrs.name <> attrs.email)
+
+      attrs = Map.put(attrs, :hashed_password, hashed_password)
+      attrs = Map.put(attrs, :confirmed_at, DateTime.utc_now() |> NaiveDateTime.truncate(:second))
+      attrs = Map.from_struct(attrs)
+
       %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  
-@doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-  
-"""
-def create_user(%Ueberauth.Auth.Info{} = attrs) do
-  try do
-    hashed_password = Bcrypt.hash_pwd_salt(attrs.name <> attrs.email)
-
-    attrs = Map.put(attrs, :hashed_password, hashed_password)
-    attrs = Map.put(attrs, :confirmed_at, DateTime.utc_now() |> NaiveDateTime.truncate(:second))
-    attrs = Map.from_struct(attrs)
-
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
-  rescue
-    exception ->
-      {:error, "User already exists!"}
+      |> User.changeset(attrs)
+      |> Repo.insert()
+    rescue
+      exception ->
+        Logger.error("#{exception}")
+        {:error, "User already exists!"}
+    end
   end
-end
 
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-  """
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-  """
-  def create_user(attrs \\ {}) do
+  def create_user(attrs \\ %{}) do
     try do
       hashed_password = Bcrypt.hash_pwd_salt(attrs["password"])
       attrs = Map.put(attrs, "hashed_password", hashed_password)
-      attrs = Map.put(attrs, "confirmed_at", DateTime.utc_now() |> NaiveDateTime.truncate(:second))
-      
+
+      attrs =
+        Map.put(attrs, "confirmed_at", DateTime.utc_now() |> NaiveDateTime.truncate(:second))
+
       %User{}
       |> User.changeset(attrs)
       |> Repo.insert()
@@ -261,7 +241,7 @@ end
       %Ecto.Changeset{data: %User{}}
 
   """
-  def change_user(changeset, attrs \\ %{}) do
+  def change_user(_changeset, attrs \\ %{}) do
     %User{}
     |> cast(attrs, [:name, :email, :password, :confirmed_at, :role, :game_id, :bet_id, :admin_id])
     |> validate_required([:name, :email])
@@ -271,10 +251,15 @@ end
   end
 
   def get_or_create_user(attrs) do
-    case Repo.get_by(User, email: "#attrs.email") do
-      nil -> create_user(attrs)
-      {:error, _reason} = error -> error
-      user -> {:ok, user}
+    case Repo.get_by(User, email: attrs.email) do
+      nil ->
+        create_user(attrs)
+
+      {:error, _reason} = error ->
+        error
+
+      user ->
+        {:ok, user}
     end
   end
 end

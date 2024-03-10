@@ -14,7 +14,6 @@ defmodule BetsWeb.Router do
     plug Bets.Plugs.Authenticate
     plug :put_user_token
     # plug Bets.Plugs.SuperUser
-
   end
 
   pipeline :api do
@@ -30,20 +29,20 @@ defmodule BetsWeb.Router do
     delete "/logout", AuthController, :logout
   end
 
-  # Routes for frontend users
+  # Routes for users
   scope "/users", BetsWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     live "/new", UserLive.Index, :new
     live "/:id/update", UserLive.Index, :update
     live "/:id/edit", UserLive.Index, :edit
-    live "/:id/show", UserLive.Index, :show
+    live "/:id", UserLive.Index, :show
     live "/", UserLive.Index, :index
   end
 
   scope "/", BetsWeb do
     pipe_through :browser
-      
+
     live "/", DashboardLive.Index, :index
     live "/dashboards/new", DashboardLive.Index, :new
     live "/dashboards/:id/edit", DashboardLive.Index, :edit
@@ -69,11 +68,10 @@ defmodule BetsWeb.Router do
 
     live "/new", AdminLive.Index, :new
     live "/:id/edit", AdminLive, :edit
-    live "/:id/show", AdminLive, :show
+    live "/:id", AdminLive, :show
     live "/:id/update", AdminLive, :update
     live "/create", AdminLive, :create
     live "/", AdminLive.Index, :index
-    live "/show/:id", AdminLive, :show
   end
 
   scope "/", BetsWeb do

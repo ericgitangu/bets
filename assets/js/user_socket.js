@@ -61,7 +61,7 @@ let channel = socket.channel('game:lobby', {"Received: ": `Player ${randomNumber
 channel
 	.join()
 	.receive('ok', (resp) => {
-		console.log('Joined successfully', resp);
+		console.log(`Client ${randomNumber} joined successfully`, resp);
 	})
 	.receive('error', (resp) => {
 		console.log('Unable to join', resp);

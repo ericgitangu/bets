@@ -49,7 +49,9 @@ defmodule BetsWeb.FrontendUserLiveTest do
     test "updates frontend_user in listing", %{conn: conn, frontend_user: frontend_user} do
       {:ok, index_live, _html} = live(conn, ~p"/frontendusers")
 
-      assert index_live |> element("#frontendusers-#{frontend_user.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element("#frontendusers-#{frontend_user.id} a", "Edit")
+             |> render_click() =~
                "Edit Frontend user"
 
       assert_patch(index_live, ~p"/frontendusers/#{frontend_user}/edit")
@@ -72,7 +74,10 @@ defmodule BetsWeb.FrontendUserLiveTest do
     test "deletes frontend_user in listing", %{conn: conn, frontend_user: frontend_user} do
       {:ok, index_live, _html} = live(conn, ~p"/frontendusers")
 
-      assert index_live |> element("#frontendusers-#{frontend_user.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#frontendusers-#{frontend_user.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#frontendusers-#{frontend_user.id}")
     end
   end

@@ -1,6 +1,7 @@
 defmodule BetsWeb.AuthController do
   use Phoenix.Controller
   plug Ueberauth
+  require Logger
 
   alias Bets.Accounts.User
 
@@ -15,6 +16,7 @@ defmodule BetsWeb.AuthController do
     name = auth.info.name
     user_creation_result = User.get_or_create_user(auth.info)
     assign_current_user(conn, token)
+
     case user_creation_result do
       {:ok, user} ->
         conn
@@ -24,6 +26,11 @@ defmodule BetsWeb.AuthController do
         |> put_session(:token, token)
         |> put_session("authorization", "Token Bearer: #{token}")
         |> redirect(to: "/")
+
+        Logger.info(
+          "User created successfully with token: #{token} and name: #{name}! User: #{inspect(user)}"
+        )
+
       {:error, reason} when reason == "User already exists!" ->
         conn
         |> put_flash(:info, "Welcome back #{name}!")
@@ -32,13 +39,17 @@ defmodule BetsWeb.AuthController do
         |> put_session(:token, token)
         |> put_session("authorization", "Token Bearer: #{token}")
         |> redirect(to: "/")
+
+        Logger.info("User already exists with token: " <> token <> " and name: " <> name <> "!")
+
       {:error, reason} ->
         conn
         |> put_flash(:error, reason)
         |> redirect(to: "/")
     end
   end
-# Logs out the user and redirects them to the home page.
+
+  # Logs out the user and redirects them to the home page.
   @spec logout(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def logout(conn, _params) do
     conn
