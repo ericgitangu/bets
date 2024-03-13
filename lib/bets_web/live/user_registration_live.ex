@@ -1,6 +1,5 @@
 defmodule BetsWeb.UserRegistrationLive do
   use BetsWeb, :live_view
-  require Logger
 
   alias Bets.Accounts
   alias Bets.Accounts.User
@@ -37,10 +36,9 @@ defmodule BetsWeb.UserRegistrationLive do
         <.input field={@form[:password]} type="password" label="Password" required />
 
         <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">
-            Create an account<span aria-hidden="true">→</span>
-          </.button>
+          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
         </:actions>
+
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">
             <.link navigate={~p"/auth/github"} class="w-fulll">
@@ -83,20 +81,11 @@ defmodule BetsWeb.UserRegistrationLive do
   def handle_event("save", %{"user" => user_params}, socket) do
     case User.get_or_create_user(user_params) do
       {:ok, user} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Account successfully created! Login to your account to proceed")
-         |> redirect(to: "/users/log_in?_action=registered")}
+        changeset = Accounts.change_user_registration(user)
+        {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset) |> put_flash(:info, "Your account #{user.name} was created successfully, redirecting you to login!") |> redirect(to: "/users/log_in")}
 
-        Logger.info("User created: #{user.email}")
-
-      {:error, :user_already_confirmed} ->
-        {:noreply, socket |> put_flash(:info, "User already confirmed")}
-        Logger.info("User already confirmed: #{user_params["email"]}")
-
-      {:error, _reason} ->
-        {:noreply, socket |> assign(:error, "Registration failed")}
-        Logger.error("User registration failed: #{user_params["email"]}")
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end
 

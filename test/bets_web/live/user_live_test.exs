@@ -6,10 +6,10 @@ defmodule BetsWeb.UserLiveTest do
 
   @create_attrs %{
     name: "some name",
-    role: :status,
+    role: :user,
     email: "some email",
     hashed_password: "some hashed_password",
-    confirmed_at: "2024-03-06T10:25:00",
+    confirmed_at: "2024-03-11T21:42:00",
     game_id: 42,
     bet_id: 42,
     admin_id: 42,
@@ -20,7 +20,7 @@ defmodule BetsWeb.UserLiveTest do
     role: :user,
     email: "some updated email",
     hashed_password: "some updated hashed_password",
-    confirmed_at: "2024-03-07T10:25:00",
+    confirmed_at: "2024-03-12T21:42:00",
     game_id: 43,
     bet_id: 43,
     admin_id: 43,

@@ -1,6 +1,5 @@
 defmodule BetsWeb.UserSessionController do
   use BetsWeb, :controller
-  require Logger
 
   alias Bets.Accounts
   alias BetsWeb.UserAuth
@@ -16,7 +15,7 @@ defmodule BetsWeb.UserSessionController do
   end
 
   def create(conn, params) do
-    create(conn, params, "Welcome back #{conn.params["user"]["email"]}!")
+    create(conn, params, "Welcome back!")
   end
 
   defp create(conn, %{"user" => user_params}, info) do
@@ -25,7 +24,6 @@ defmodule BetsWeb.UserSessionController do
     if user = Accounts.get_user_by_email_and_password(email, password) do
       conn
       |> put_flash(:info, info)
-      |> assign(:current_user, user)
       |> UserAuth.log_in_user(user, user_params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
@@ -36,16 +34,9 @@ defmodule BetsWeb.UserSessionController do
     end
   end
 
-  def delete(conn, params) do
-    Logger.info("Params: #{inspect(params)}")
-
+  def delete(conn, _params) do
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> UserAuth.log_out_user()
-    |> assign(:current_user, nil)
-    |> put_session(:current_user, nil)
-    |> delete_resp_cookie("authorization")
-    |> configure_session(drop: true)
-    |> redirect(to: "/")
   end
 end

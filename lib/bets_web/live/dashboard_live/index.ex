@@ -10,17 +10,17 @@ defmodule BetsWeb.DashboardLive.Index do
     <div class="dashboard">
       <h1 class="mb-2 font-bold text-center">Dashboard</h1>
       <div class="analytics">
-          <div class="game">
-            <hr/>
-            <ul class ="list-disc text-sm my-2 ">
-              <%= for game <- Bets.Games.list_games() do %>
-                <li class="leading-8"><%= game.name %></li>
-                <li class="leading-8">Start time: <%= game.game_time %></li>
-                <li class="leading-8">Status: <%= game.status %></li>
-              <% end %>
-            </ul>
-            <hr/>
-          </div>
+        <div class="game">
+          <hr />
+          <ul class="list-disc text-sm my-2 ">
+            <%= for game <- Bets.Games.list_games() do %>
+              <li class="leading-8"><%= game.name %></li>
+              <li class="leading-8">Start time: <%= game.game_time %></li>
+              <li class="leading-8">Status: <%= game.status %></li>
+            <% end %>
+          </ul>
+          <hr />
+        </div>
       </div>
     </div>
     """

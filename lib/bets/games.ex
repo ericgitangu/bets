@@ -148,13 +148,15 @@ defmodule Bets.Games do
     {:ok, {updated_game, player}}
   end
 
-  def get_past_games(_page \\ 1, per_page \\ 10) do
-    query = from(g in Game, order_by: [asc: g.game_at, asc: g.id])
+  def get_past_games(page \\ 1, per_page \\ 10) do
+    query =
+      from(g in Game,
+        where: g.created_at <= ^DateTime.utc_now(),
+        order_by: [asc: g.game_at, asc: g.id]
+      )
 
     Game
-    |> where([g], g.created_at <= ^DateTime.utc_now())
-    |> order_by(desc: :created_at)
-    |> Repo.paginate(query, cursor_fields: [:game_at, :id], limit: per_page)
+    |> Repo.paginate(query, page: page, page_size: per_page, cursor_fields: [:game_at, :id])
     |> Repo.all()
   end
 end

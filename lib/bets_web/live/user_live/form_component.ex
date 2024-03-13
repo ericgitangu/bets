@@ -1,7 +1,7 @@
 defmodule BetsWeb.UserLive.FormComponent do
   use BetsWeb, :live_component
 
-  alias Bets.Accounts
+  alias Bets.Accounts.User
 
   @impl true
   def render(assigns) do
@@ -44,7 +44,7 @@ defmodule BetsWeb.UserLive.FormComponent do
 
   @impl true
   def update(%{user: user} = assigns, socket) do
-    changeset = Accounts.change_user(user)
+    changeset = User.change_user(user)
 
     {:ok,
      socket
@@ -56,7 +56,7 @@ defmodule BetsWeb.UserLive.FormComponent do
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset =
       socket.assigns.user
-      |> Accounts.change_user(user_params)
+      |> User.change_user(user_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
@@ -67,7 +67,7 @@ defmodule BetsWeb.UserLive.FormComponent do
   end
 
   defp save_user(socket, :edit, user_params) do
-    case Accounts.update_user(socket.assigns.user, user_params) do
+    case User.update_user(socket.assigns.user, user_params) do
       {:ok, user} ->
         notify_parent({:saved, user})
 

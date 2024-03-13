@@ -13,7 +13,7 @@ defmodule Bets.UsersFixtures do
         name: "some name"
       })
 
-    {:ok, user} = Bets.Accounts.create_user(attrs)
+    {:ok, user} = Bets.Accounts.User.create_user(attrs)
 
     user
   end

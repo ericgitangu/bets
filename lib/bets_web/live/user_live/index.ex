@@ -1,12 +1,11 @@
 defmodule BetsWeb.UserLive.Index do
   use BetsWeb, :live_view
 
-  alias Bets.Accounts
   alias Bets.Accounts.User
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, Accounts.list_users())}
+    {:ok, stream(socket, :users, User.list_users())}
   end
 
   @impl true
@@ -17,7 +16,7 @@ defmodule BetsWeb.UserLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit User")
-    |> assign(:user, Accounts.get_user!(id))
+    |> assign(:user, User.get_user!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -40,7 +39,7 @@ defmodule BetsWeb.UserLive.Index do
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
-    {:ok, _} = Accounts.delete_user(user)
+    {:ok, _} = User.delete_user(user)
 
     {:noreply, stream_delete(socket, :users, user)}
   end

@@ -2,6 +2,7 @@ defmodule BetsWeb.Router do
   use BetsWeb, :router
 
   import BetsWeb.UserAuth
+  require Logger
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -29,14 +30,13 @@ defmodule BetsWeb.Router do
     delete "/logout", AuthController, :logout
   end
 
-  # Routes for users
+  # Routes for frontend users
   scope "/users", BetsWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
+    pipe_through :browser
     live "/new", UserLive.Index, :new
     live "/:id/update", UserLive.Index, :update
     live "/:id/edit", UserLive.Index, :edit
-    live "/:id", UserLive.Index, :show
+    live "/:id/show", UserLive.Index, :show
     live "/", UserLive.Index, :index
   end
 
@@ -52,7 +52,7 @@ defmodule BetsWeb.Router do
   end
 
   scope "/games", BetsWeb do
-    pipe_through [:browser, :require_super_user]
+    pipe_through :browser
 
     live "/", GameLive.Show, :index
     live "/new", GameLive.Index, :new
@@ -68,10 +68,11 @@ defmodule BetsWeb.Router do
 
     live "/new", AdminLive.Index, :new
     live "/:id/edit", AdminLive, :edit
-    live "/:id", AdminLive, :show
+    live "/:id/show", AdminLive, :show
     live "/:id/update", AdminLive, :update
     live "/create", AdminLive, :create
     live "/", AdminLive.Index, :index
+    live "/show/:id", AdminLive, :show
   end
 
   scope "/", BetsWeb do
@@ -106,6 +107,26 @@ defmodule BetsWeb.Router do
     end
   end
 
+  defp put_user_token(conn, _) do
+    if conn.assigns[:current_user] do
+      Logger.info("Assigning token to current user, #{inspect(conn.assigns.current_user)}")
+      token = Phoenix.Token.sign(conn, "user socket", conn.assigns.current_user.id)
+      assign(conn, :user_token, token)
+    else
+      conn
+    end
+  end
+
+  # defp require_super_user(conn, _) do
+  #   if conn.assigns[:superuser] do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "Contact an administrator for access.")
+  #     |> redirect(to: "/users/log_in")
+  #   end
+  # end
+
   ## Authentication routes
 
   scope "/", BetsWeb do
@@ -126,7 +147,7 @@ defmodule BetsWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: BetsWeb.UserAuth do
+      on_mount: [{BetsWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
@@ -141,25 +162,6 @@ defmodule BetsWeb.Router do
       on_mount: [{BetsWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
-    end
-  end
-
-  defp put_user_token(conn, _) do
-    if conn.assigns[:current_user] do
-      token = Phoenix.Token.sign(conn, "user socket", conn.assigns.current_user.id)
-      assign(conn, :user_token, token)
-    else
-      conn
-    end
-  end
-
-  defp require_super_user(conn, _) do
-    if conn.assigns[:superuser] do
-      conn
-    else
-      conn
-      |> put_flash(:error, "Contact an administrator for access.")
-      |> redirect(to: "/users/log_in")
     end
   end
 end
